@@ -113,7 +113,7 @@ public:
 	{
 		Objects Chest(0,0,0,0,0,0,1.5,0.5,0.5,true), Abdomen(0,-0.68,0,0,0,0,1.25,0.85,0.5,true), Pelvis(0, -1.5, 0, 0, 0, 0, 1.0, 0.75, 0.5, true);
 		glPushMatrix();
-			AnimatedTransformations(0, 1, 0, 0, 0, 0, 1, 1, 1);
+			AnimatedTransformations(0, 1, -20+rot *0.008, 0, 0, 0, 1, 1, 1);
 			glColor3f(0.3, 0.1, 0.0);
 			glPushMatrix();
 			Pelvis.setObject(); //All are child to this
