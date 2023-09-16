@@ -150,6 +150,9 @@ public:
 			glPushMatrix();
 			Pelvis.setObject(); //All are child to this
 				glPushMatrix();
+					
+				AnimatedRotation(Chest, 0, -sin(rot * 0.01)*5, 0,  1);
+					
 					glColor3f(0.3, 0.1, 0.2);
 					Chest.setObject(); //Abdomen and Arms are the child 
 						glPushMatrix();
@@ -165,11 +168,12 @@ public:
 						glPushMatrix();
 							makeHead();
 						glPopMatrix();
+
 				glPopMatrix();
-				glPushMatrix();
-					makeLeftLeg();
-					makeRightLeg();
-				glPopMatrix();
+						glPushMatrix();
+							makeLeftLeg();
+							makeRightLeg();
+						glPopMatrix();
 			glPopMatrix();
 		glPopMatrix();
 	}
@@ -191,23 +195,36 @@ public:
 	}
 	void makeLeftArm()
 	{
-		//std::cout << sin(rot * 0.1) * 20 << std::endl;
-		Objects Shoulder(0,0,0,0,0,0,1.1,0.7,0.5,true), Arm1( -0.1, -0.8, 0, 0, 0, 0, 0.5, 1.2, 0.25, true), ArmJoint(-0.1, -1.5, 0, 0, 0, 0, 0.25, 0.25, 0.25, false),Arm2(-0.1, -2.1, 0, 0, 0, 0, 0.5, 1.2, 0.25, true);
+		
+		Objects Shoulder(0,0,0,0,0,0,1.1,0.7,0.5,true), 
+			Arm1( -0.1, -0.8, 0, 0, 0, 0, 0.5, 1.2, 0.25, true),
+			ArmJoint(-0.1, -1.5, 0, 0, 0, 0, 0.25, 0.25, 0.25, false),
+			Arm2(-0.1, -2.1, 0, 0, 0, 0, 0.5, 1.2, 0.25, true);
+
+
+
 		glPushMatrix();
 		AnimatedTransformations(-1.3, 0, 0, 1, 1, 1); //Shoulder
+		AnimatedRotation(Shoulder,sin(rot*0.01)*30,0,0,1);
 		
 		
 		glColor3f(0.4, 0.1, 0.9);
 		Shoulder.setObject();
 		glPushMatrix();
 			glColor3f(0.2, 0.5, 0.6);
-				Arm1.setObject();
+				Arm1.setObject();  //Upper Arm
 				glPushMatrix();
+					//Elbow Joint Animation Here
+					//AnimatedTransformations();
+					float angle = sin(rot * 0.01) * 40<0? sin(rot * 0.01) * 40 :0;
+					AnimatedRotation(ArmJoint,angle, 0, 0, 1);
+
+
 					glColor3f(0.35, 0.21, 0.24);
-					ArmJoint.setObject();
+					ArmJoint.setObject();			//Elbow Joint
 					glPushMatrix();
 						glColor3f(0.2, 0.5, 0.6);
-						Arm2.setObject();
+						Arm2.setObject(); //Lower Arm
 					glPopMatrix();
 				glPopMatrix();
 			glPopMatrix();
@@ -215,10 +232,15 @@ public:
 	}
 	void makeRightArm()
 	{
-		Objects Shoulder(0,0,0,0,0,0,1.1,0.7,0.5,true), Arm1( 0.1, -0.8, 0, 0, 0, 0, 0.5, 1.2, 0.25, true), ArmJoint(0.1, -1.5, 0, 0, 0, 0, 0.25, 0.25, 0.25, false),Arm2(0.1, -2.1, 0, 0, 0, 0, 0.5, 1.2, 0.25, true);
+		Objects Shoulder(0,0,0,0,0,0,1.1,0.7,0.5,true), 
+			Arm1( 0.1, -0.8, 0, 0, 0, 0, 0.5, 1.2, 0.25, true), 
+			ArmJoint(0.1, -1.5, 0, 0, 0, 0, 0.25, 0.25, 0.25, false),
+			Arm2(0.1, -2.1, 0, 0, 0, 0, 0.5, 1.2, 0.25, true);
+
+
 		glPushMatrix();
 		AnimatedTransformations(1.3, 0, 0, 1, 1, 1); //Shoulder
-		
+		AnimatedRotation(Shoulder, -sin(rot * 0.01) * 20, 0, 0, 1);
 		
 		glColor3f(0.4, 0.1, 0.9);
 		Shoulder.setObject();
@@ -227,17 +249,19 @@ public:
 				Arm1.setObject();
 				
 				glPushMatrix();
+					//Elbow Joint Animation Here
+					//AnimatedTransformations();
+					float angle = -sin(rot * 0.01) * 40 < 0 ? -sin(rot * 0.01) * 40 : 0;
+					AnimatedRotation(ArmJoint, angle, 0, 0, 1);
 
-
-				AnimatedRotation(ArmJoint,30,0,0,true);
 					
 
 					glPushMatrix();
 						glColor3f(0.35, 0.21, 0.24);
-						ArmJoint.setObject();
+						ArmJoint.setObject(); //Elbow Joint
 							glPushMatrix();
 								glColor3f(0.2, 0.5, 0.6);
-								Arm2.setObject();
+								Arm2.setObject();   //Lower Arm
 							glPopMatrix();
 					glPopMatrix();
 				glPopMatrix();
@@ -246,20 +270,29 @@ public:
 	}
 	void makeLeftLeg()
 	{
-		Objects Thighs(0, -0.2, 0, 0, 0, 0, 1.1, 0.5, 0.5, true), Leg1(-0.12, -1.2, 0, 0, 0, 0, 0.5, 1.5, 0.5, true), LegJoint(-0.12, -2.15, 0, 0, 0, 0, 0.3, 0.3, 0.3, false), Leg2(-0.12, -3.1, 0, 0, 0, 0, 0.5, 1.5, 0.5, true);
+		Objects Thighs(0, -0.2, 0, 0, 0, 0, 1.1, 0.5, 0.5, true), 
+			Leg1(-0.12, -1.2, 0, 0, 0, 0, 0.5, 1.5, 0.5, true), 
+			LegJoint(-0.12, -2.15, 0, 0, 0, 0, 0.3, 0.3, 0.3, false), 
+			Leg2(-0.12, -3.1, 0, 0, 0, 0, 0.5, 1.5, 0.5, true);
+
+
 		glPushMatrix();
 		AnimatedTransformations(-0.5, -1.95, 0, 1, 1, 1);
 		glColor3f(0.4, 0.1, 0.9);
 			Thighs.setObject();
 				glPushMatrix();
 					glColor3f(0.35, 0.21, 0.24);
-					Leg1.setObject();
+					Leg1.setObject();		//Upper leg
 					glPushMatrix();
+						//Knee Joint Animation Here
+						//AnimatedTransformations();
+						//AnimatedRotation();
+						
 						glColor3f(0.2, 0.5, 0.6);
-						LegJoint.setObject();
+						LegJoint.setObject();   //Knee JOint
 						glPushMatrix();
-						glColor3f(0.35, 0.21, 0.24);
-						Leg2.setObject();
+							glColor3f(0.35, 0.21, 0.24);
+							Leg2.setObject();     //Lower Leg
 						glPopMatrix();
 					glPopMatrix();
 				glPopMatrix();
@@ -274,13 +307,18 @@ public:
 			Thighs.setObject();
 				glPushMatrix();
 					glColor3f(0.35, 0.21, 0.24);
-					Leg1.setObject();
+					Leg1.setObject();		//Upper leg
 					glPushMatrix();
+						//Knee Joint Animation Here
+						//AnimatedTransformations();
+						//AnimatedRotation();
+
+
 						glColor3f(0.2, 0.5, 0.6);
-						LegJoint.setObject();
+						LegJoint.setObject();  //Knee Joint
 						glPushMatrix();
-						glColor3f(0.35, 0.21, 0.24);
-						Leg2.setObject();
+							glColor3f(0.35, 0.21, 0.24);
+							Leg2.setObject(); //Lower Leg
 						glPopMatrix();
 					glPopMatrix();
 				glPopMatrix();
