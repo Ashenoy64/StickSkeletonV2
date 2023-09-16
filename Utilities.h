@@ -3,22 +3,15 @@
 #include<math.h>
 #include<iostream>
 
-void AnimatedTransformations(float px, float py, float pz, float rx, float ry, float rz, float sx, float sy, float sz)
-{
-	glTranslatef(px, py, pz);
-	glRotatef(rz, 0, 0, 1);
-	glRotatef(ry, 0, 1, 0);
-	glRotatef(rx, 1, 0, 0);
-	glScalef(sx, sy, sz);
-}
+
 
 class Objects
 {
 private:
-	float posX, posY, posZ, rotX, rotY, rotZ, sX, sY, sZ;
 	bool isCube;
 
 public:
+	float posX, posY, posZ, rotX, rotY, rotZ, sX, sY, sZ;
 	Objects(float posx, float posy, float posz, float rotx, float roty, float rotz, float sx, float sy,float sz, bool isCubeParams)
 	{
 		//position with respect to origin
@@ -42,7 +35,20 @@ public:
 
 	}
 
-	
+	void setRotation(float x,float y,float z)
+	{
+		rotX = x;
+		rotY = y;
+		rotZ = z;
+	}
+
+	void setTranslation(float x,float y,float z)
+	{
+		posX = x;
+		posY = y;
+		posZ = z;
+	}
+
 
 
 	void setObject()
@@ -62,6 +68,32 @@ public:
 	}
 };
 
+
+
+void AnimatedTransformations(float px, float py, float pz, float sx, float sy, float sz)
+{
+	glTranslatef(px, py, pz);
+	glScalef(sx, sy, sz);
+}
+
+
+
+void AnimatedRotation(Objects obj, float rx, float ry, float rz, bool local)
+{
+	if (local)
+	{
+		glTranslatef(obj.posX, obj.posY, obj.posZ);
+		glRotatef(rz, 0, 0, 1);
+		glRotatef(ry, 0, 1, 0);
+		glRotatef(rx, 1, 0, 0);
+		glTranslatef(-obj.posX, -obj.posY, -obj.posZ);
+	}
+	else {
+		glRotatef(rz, 0, 0, 1);
+		glRotatef(ry, 0, 1, 0);
+		glRotatef(rx, 1, 0, 0);
+	}
+}
 
 void ApplyPerspectiveProjection()
 {
@@ -101,7 +133,7 @@ public:
 	{
 		Objects Head(0,0,0,0,0,0,0.5,0.5,0.5,false), Neck(0,-0.75,0,0,0,0,0.25,0.5,0.25,true);
 		glPushMatrix();
-			AnimatedTransformations(0,1,0,0,0,0,1,1,1);
+			AnimatedTransformations(0,1,0,1,1,1);
 			glColor3f(0.3, 0.1, 0.1);
 			Head.setObject();
 			glColor3f(0.0, 0.2, 0.2);
@@ -113,7 +145,7 @@ public:
 	{
 		Objects Chest(0,0,0,0,0,0,1.5,0.5,0.5,true), Abdomen(0,-0.68,0,0,0,0,1.25,0.85,0.5,true), Pelvis(0, -1.5, 0, 0, 0, 0, 1.0, 0.75, 0.5, true);
 		glPushMatrix();
-			AnimatedTransformations(0, 1, -20+rot *0.008, 0, 0, 0, 1, 1, 1);
+			AnimatedTransformations(0, 1, 0, 1, 1, 1);
 			glColor3f(0.3, 0.1, 0.0);
 			glPushMatrix();
 			Pelvis.setObject(); //All are child to this
@@ -146,7 +178,7 @@ public:
 	{
 		Objects Chest(0,0,0,0,0,0,1.5,0.5,0.5,true), Abdomen(0,-0.68,0,0,0,0,1.25,0.85,0.5,true), Pelvis(0, -1.5, 0, 0, 0, 0, 1.0, 0.75, 0.5, true);
 		glPushMatrix();
-		AnimatedTransformations(0, 1, 0, 0, 0, 0, 1, 1, 1);
+		AnimatedTransformations(0, 1, 0, 1, 1, 1);
 		Pelvis.setObject();
 			glPushMatrix();
 				glColor3f(0.3, 0.1, 0.2);
@@ -159,70 +191,97 @@ public:
 	}
 	void makeLeftArm()
 	{
-		Objects Shoulder(0,0,0,0,0,0,0.75,0.7,0.5,true), Arm( -0.05, -0.8, 0, 0, 0, 0, 0.5, 1.2, 0.25, true), Pam(-0.05, -1.5, 0, 0, 0, 0, 0.25, 0.25, 0.25, false);
+		//std::cout << sin(rot * 0.1) * 20 << std::endl;
+		Objects Shoulder(0,0,0,0,0,0,1.1,0.7,0.5,true), Arm1( -0.1, -0.8, 0, 0, 0, 0, 0.5, 1.2, 0.25, true), ArmJoint(-0.1, -1.5, 0, 0, 0, 0, 0.25, 0.25, 0.25, false),Arm2(-0.1, -2.1, 0, 0, 0, 0, 0.5, 1.2, 0.25, true);
 		glPushMatrix();
-		AnimatedTransformations(-1.15, 0, 0, -sin(rot * 0.01) * 20, 0, 0, 1, 1, 1);
+		AnimatedTransformations(-1.3, 0, 0, 1, 1, 1); //Shoulder
+		
 		
 		glColor3f(0.4, 0.1, 0.9);
 		Shoulder.setObject();
 		glPushMatrix();
 			glColor3f(0.2, 0.5, 0.6);
-				Arm.setObject();
+				Arm1.setObject();
 				glPushMatrix();
 					glColor3f(0.35, 0.21, 0.24);
-					Pam.setObject();
+					ArmJoint.setObject();
+					glPushMatrix();
+						glColor3f(0.2, 0.5, 0.6);
+						Arm2.setObject();
+					glPopMatrix();
 				glPopMatrix();
 			glPopMatrix();
 		glPopMatrix();
 	}
 	void makeRightArm()
 	{
-		Objects Shoulder(0, 0, 0, 0, 0, 0, 0.75, 0.7, 0.5, true), Arm(0.05, -0.8, 0, 0, 0, 0, 0.5, 1.2, 0.25, true), Pam(0.05, -1.5, 0, 0, 0, 0, 0.25, 0.25, 0.25, false);
+		Objects Shoulder(0,0,0,0,0,0,1.1,0.7,0.5,true), Arm1( 0.1, -0.8, 0, 0, 0, 0, 0.5, 1.2, 0.25, true), ArmJoint(0.1, -1.5, 0, 0, 0, 0, 0.25, 0.25, 0.25, false),Arm2(0.1, -2.1, 0, 0, 0, 0, 0.5, 1.2, 0.25, true);
 		glPushMatrix();
-		AnimatedTransformations(1.15, 0, 0, sin(rot*0.01)*20 , 0, 0, 1, 1, 1);
+		AnimatedTransformations(1.3, 0, 0, 1, 1, 1); //Shoulder
+		
 		
 		glColor3f(0.4, 0.1, 0.9);
 		Shoulder.setObject();
 		glPushMatrix();
 			glColor3f(0.2, 0.5, 0.6);
-				Arm.setObject();
+				Arm1.setObject();
+				
 				glPushMatrix();
-					glColor3f(0.35, 0.21, 0.24);
-					Pam.setObject();
+
+
+				AnimatedRotation(ArmJoint,30,0,0,true);
+					
+
+					glPushMatrix();
+						glColor3f(0.35, 0.21, 0.24);
+						ArmJoint.setObject();
+							glPushMatrix();
+								glColor3f(0.2, 0.5, 0.6);
+								Arm2.setObject();
+							glPopMatrix();
+					glPopMatrix();
 				glPopMatrix();
 			glPopMatrix();
 		glPopMatrix();
 	}
 	void makeLeftLeg()
 	{
-		Objects Thighs(0, -0.2, 0, 0, 0, 0, 1.1, 0.5, 0.5, true), Leg(-0.12, -1.45, 0, 0, 0, 0, 0.5, 2, 0.5, true), Feet(-0.12, -2.45, 0, 0, 0, 0, 0.3, 0.3, 0.3, false);
+		Objects Thighs(0, -0.2, 0, 0, 0, 0, 1.1, 0.5, 0.5, true), Leg1(-0.12, -1.2, 0, 0, 0, 0, 0.5, 1.5, 0.5, true), LegJoint(-0.12, -2.15, 0, 0, 0, 0, 0.3, 0.3, 0.3, false), Leg2(-0.12, -3.1, 0, 0, 0, 0, 0.5, 1.5, 0.5, true);
 		glPushMatrix();
-		AnimatedTransformations(-0.5, -1.95, 0, sin(rot * 0.01) * 20, 0, 0, 1, 1, 1);
+		AnimatedTransformations(-0.5, -1.95, 0, 1, 1, 1);
 		glColor3f(0.4, 0.1, 0.9);
 			Thighs.setObject();
 				glPushMatrix();
 					glColor3f(0.35, 0.21, 0.24);
-					Leg.setObject();
+					Leg1.setObject();
 					glPushMatrix();
 						glColor3f(0.2, 0.5, 0.6);
-						Feet.setObject();
+						LegJoint.setObject();
+						glPushMatrix();
+						glColor3f(0.35, 0.21, 0.24);
+						Leg2.setObject();
+						glPopMatrix();
 					glPopMatrix();
 				glPopMatrix();
 		glPopMatrix();
 	}
 	void makeRightLeg()
 	{
-		Objects Thighs(0, -0.2, 0, 0, 0, 0, 1.1, 0.5, 0.5, true), Leg(0.12, -1.45, 0, 0, 0, 0, 0.5, 2, 0.5, true), Feet(0.12, -2.45, 0, 0, 0, 0, 0.3, 0.3, 0.3, false);
+		Objects Thighs(0, -0.2, 0, 0, 0, 0, 1.1, 0.5, 0.5, true), Leg1(0.12, -1.2, 0, 0, 0, 0, 0.5, 1.5, 0.5, true), LegJoint(0.12, -2.15, 0, 0, 0, 0, 0.3, 0.3, 0.3, false), Leg2(0.12, -3.1, 0, 0, 0, 0, 0.5, 1.5, 0.5, true);
 		glPushMatrix();
-		AnimatedTransformations(0.5, -1.95, 0, -sin(rot * 0.01) * 20, 0, 0, 1, 1, 1);
+		AnimatedTransformations(0.5, -1.95, 0, 1, 1, 1);
 		glColor3f(0.4, 0.1, 0.9);
 			Thighs.setObject();
 				glPushMatrix();
 					glColor3f(0.35, 0.21, 0.24);
-					Leg.setObject();
+					Leg1.setObject();
 					glPushMatrix();
 						glColor3f(0.2, 0.5, 0.6);
-						Feet.setObject();
+						LegJoint.setObject();
+						glPushMatrix();
+						glColor3f(0.35, 0.21, 0.24);
+						Leg2.setObject();
+						glPopMatrix();
 					glPopMatrix();
 				glPopMatrix();
 		glPopMatrix();
