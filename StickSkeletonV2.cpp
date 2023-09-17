@@ -4,7 +4,7 @@
 #include "Utilities.h"
 
 
-#define EDITING false
+#define EDITING true
 #define PI 3.14159265358979323846
 
 float angle = 0.0f;

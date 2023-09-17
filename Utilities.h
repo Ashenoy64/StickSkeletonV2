@@ -8,7 +8,7 @@
 
 
 
-#define animationSequnence "Walking"
+#define animationSequnence "jumping"
 
 
 
@@ -123,10 +123,7 @@ class HumanoidSkeleton {
 private:
 	float rot=0;
 
-	float bodyHorizontal=0;
-	float bodyVertical = 0;
-	float bodyRotation = 0;
-
+	float frame = 1;
 	
 
 
@@ -152,19 +149,14 @@ private:
 public:
 	HumanoidSkeleton()
 	{
-		makeSkeleton();
-		//makeHead();
-		//makeBody();
-		//makeLeftArm();
-		//makeRightArm();
-		//makeLeftLeg();
-		//makeRightLeg();
+		
 	}
 
 	void Update(float angle)
 	{
 
 		rot = angle;
+		++frame;
 
 		if (animationSequnence =="Walking")
 		{
@@ -203,15 +195,17 @@ public:
 
 
 		}
-		else if (animationSequnence == "Jumping")
+		else if (animationSequnence == "jumping")
 		{
 			//Jumping animation through csv
+			readCSV("jumping.csv", frame);
 
 		}
 		else {
 			//stopped Animation
 		}
 		
+		//std::cout << leftLeg[1][0] << std::endl;
 
 		makeSkeleton();
 		
@@ -231,13 +225,13 @@ public:
 			float angle = sin(rot * 0.01);
 			
 			AnimatedTransformations(0,body[0][1], body[0][2] ,1,1,1);
-			AnimatedRotation(Pelvis,body[0][0], body[0][1], body[0][2], 1);
+			AnimatedRotation(Pelvis,body[1][0], body[1][1], body[1][2], 1);
 
 			//AnimatedRotation();
 			Pelvis.setObject(); //All are child to this
 				glPushMatrix();
 				AnimatedTransformations(chest[0][0], chest[0][1],chest[0][2],1,1,1);
-				AnimatedRotation(Chest, 0, chest[1][1], 0,  1);
+				AnimatedRotation(Chest, chest[1][0], chest[1][1],chest[1][2] ,  1);
 					
 					glColor3f(0.3, 0.1, 0.2);
 					Chest.setObject(); //Abdomen and Arms are the child 
@@ -462,20 +456,19 @@ public:
 
 		if (!file.is_open())
 		{
-			std::cerr << " Unable to open file !" << std::endl;
+			std::cout << " Unable to open file !" << std::endl;
 			return false;
 		}
 
 		std::string line;
 		int row = 0;
-
 		while (std::getline(file, line)) {
-
+			
 			std::istringstream iss(line);
 			int col = 0;
 			row++;
-
-			if (frame > row)
+			
+			if (row > frame)
 				break;
 			else if(frame==row)
 			while (col < 60) {  
@@ -485,11 +478,11 @@ public:
 					return false;
 				}
 
+				//std::cout << value << std::endl;
 				float floatValue = std::stof(value);
+				
+			
 
-				switch (col) {
-
-					//left leg
 					switch (col) {
 						// Position and rotation for left leg
 					case 0:
@@ -698,17 +691,11 @@ public:
 						break;
 					}
 
-
-				default:
-					break;
-				}
-
 				col++;
 			}
 
 			
 		}
-
 		file.close();
 		return true;
 	}
