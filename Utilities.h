@@ -5,6 +5,8 @@
 
 
 
+
+
 class Objects
 {
 private:
@@ -114,12 +116,18 @@ void LookAt(float x, float y, float z)
 
 class HumanoidSkeleton {
 private:
-	float rot;
+	float rot=0;
+	float forward=0;
+
+	float rightLegJoint = 0;
+	float leftLegJoint = 0;
+
+	float rightLeg = 0;
+	float leftLeg = 0;
 
 public:
-	HumanoidSkeleton(float angle)
+	HumanoidSkeleton()
 	{
-		rot = angle;
 		makeSkeleton();
 		//makeHead();
 		//makeBody();
@@ -129,29 +137,35 @@ public:
 		//makeRightLeg();
 	}
 
-	void makeHead()
+	void Update(float angle)
 	{
-		Objects Head(0,0,0,0,0,0,0.5,0.5,0.5,false), Neck(0,-0.75,0,0,0,0,0.25,0.5,0.25,true);
-		glPushMatrix();
-			AnimatedTransformations(0,1,0,1,1,1);
-			glColor3f(0.3, 0.1, 0.1);
-			Head.setObject();
-			glColor3f(0.0, 0.2, 0.2);
-			Neck.setObject();
-		glPopMatrix();
+
+		rot = angle;
+		
+		makeSkeleton();
+		
 	}
 
 	void makeSkeleton()
 	{
+
+		forward += 0.01;
+
+
 		Objects Chest(0,0,0,0,0,0,1.5,0.5,0.5,true), Abdomen(0,-0.68,0,0,0,0,1.25,0.85,0.5,true), Pelvis(0, -1.5, 0, 0, 0, 0, 1.0, 0.75, 0.5, true);
 		glPushMatrix();
 			AnimatedTransformations(0, 1, 0, 1, 1, 1);
 			glColor3f(0.3, 0.1, 0.0);
 			glPushMatrix();
+			
+			float angle = sin(rot * 0.01);
+			
+			
+			AnimatedTransformations(0,sin(rot*0.01)*0.12, -10 + (rot * 0.005) ,1,1,1);
 			Pelvis.setObject(); //All are child to this
 				glPushMatrix();
 					
-				AnimatedRotation(Chest, 0, -sin(rot * 0.01)*5, 0,  1);
+				AnimatedRotation(Chest, 0, -sin(rot * 0.01)*20, 0,  1);
 					
 					glColor3f(0.3, 0.1, 0.2);
 					Chest.setObject(); //Abdomen and Arms are the child 
@@ -177,6 +191,21 @@ public:
 			glPopMatrix();
 		glPopMatrix();
 	}
+	
+	
+	
+	void makeHead()
+	{
+		Objects Head(0,0,0,0,0,0,0.5,0.5,0.5,false), Neck(0,-0.75,0,0,0,0,0.25,0.5,0.25,true);
+		glPushMatrix();
+			AnimatedTransformations(0,1,0,1,1,1);
+			glColor3f(0.3, 0.1, 0.1);
+			Head.setObject();
+			glColor3f(0.0, 0.2, 0.2);
+			Neck.setObject();
+		glPopMatrix();
+	}
+
 
 	void makeBody()
 	{
@@ -278,6 +307,7 @@ public:
 
 		glPushMatrix();
 		AnimatedTransformations(-0.5, -1.95, 0, 1, 1, 1);
+		AnimatedRotation(Thighs,-sin(rot*0.01)*30, 0, 0, 1);
 		glColor3f(0.4, 0.1, 0.9);
 			Thighs.setObject();
 				glPushMatrix();
@@ -286,7 +316,8 @@ public:
 					glPushMatrix();
 						//Knee Joint Animation Here
 						//AnimatedTransformations();
-						//AnimatedRotation();
+					float angle = sin(rot * 0.01) * 30 > 0 ? sin(rot * 0.01) * 30: sin(rot * 0.01) * 5;
+					AnimatedRotation(LegJoint, angle, 0, 0, 1);
 						
 						glColor3f(0.2, 0.5, 0.6);
 						LegJoint.setObject();   //Knee JOint
@@ -303,6 +334,8 @@ public:
 		Objects Thighs(0, -0.2, 0, 0, 0, 0, 1.1, 0.5, 0.5, true), Leg1(0.12, -1.2, 0, 0, 0, 0, 0.5, 1.5, 0.5, true), LegJoint(0.12, -2.15, 0, 0, 0, 0, 0.3, 0.3, 0.3, false), Leg2(0.12, -3.1, 0, 0, 0, 0, 0.5, 1.5, 0.5, true);
 		glPushMatrix();
 		AnimatedTransformations(0.5, -1.95, 0, 1, 1, 1);
+		AnimatedRotation(Thighs, sin(rot * 0.01) * 30, 0, 0, 1);
+		
 		glColor3f(0.4, 0.1, 0.9);
 			Thighs.setObject();
 				glPushMatrix();
@@ -311,7 +344,8 @@ public:
 					glPushMatrix();
 						//Knee Joint Animation Here
 						//AnimatedTransformations();
-						//AnimatedRotation();
+					float angle = -sin(rot * 0.01) * 30 >0 ? -sin(rot * 0.01) * 30 : -sin(rot * 0.01) * 5;
+					AnimatedRotation(LegJoint, angle, 0, 0, 1);
 
 
 						glColor3f(0.2, 0.5, 0.6);
@@ -326,7 +360,10 @@ public:
 	}
 };
 
+HumanoidSkeleton S;
+
+
 void SequeneceManager(float angle)
 {
-	HumanoidSkeleton S(angle);
+	S.Update(angle);
 }
