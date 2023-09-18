@@ -28,5 +28,8 @@
     <None Include="jumping.csv">
       <Filter>Resource Files</Filter>
     </None>
+    <None Include="walking.csv">
+      <Filter>Resource Files</Filter>
+    </None>
   </ItemGroup>
 </Project>

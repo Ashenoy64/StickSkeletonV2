@@ -8,7 +8,7 @@
 
 
 
-#define animationSequnence "jumping"
+#define animationSequnence "csv_walking"
 
 
 
@@ -161,7 +161,6 @@ public:
 		if (animationSequnence =="Walking")
 		{
 
-
 			//right leg walking motion: rotation along x axis
 			rightLeg[1][0] = sin(rot * 0.01) * 30;
 			rightLegJoint[1][0] = -sin(rot * 0.01) * 30 > 0 ? -sin(rot * 0.01) * 30 : -sin(rot * 0.01) * 5;
@@ -184,7 +183,7 @@ public:
 
 			//limiting forward motion of the body
 			if (!(sin(angle) > -0.2 and sin(angle) < 0.2))
-				body[0][2] = -10 + (rot * 0.004);
+				body[0][2] = -10 + (rot * 0.0035);
 
 
 			body[0][1] = -sin(rot * 0.01) * 0.05;
@@ -193,7 +192,10 @@ public:
 
 			
 
-
+		}
+		else if (animationSequnence == "csv_walking")
+		{
+			readCSV("walking.csv", frame);
 		}
 		else if (animationSequnence == "jumping")
 		{
