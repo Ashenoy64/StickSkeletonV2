@@ -7,8 +7,12 @@
 #include <string>
 
 
+//walking : uses code calculations
+//csv_walking : uses inefficient method to read csv for animation
+//csv_walking_efficient : uses efficient csv reading method
 
-#define animationSequnence "csv_walking"
+
+#define animationSequnence "csv_walking_efficient"
 
 
 
@@ -125,8 +129,9 @@ private:
 
 	float frame = 1;
 	
-
-
+	std::ifstream filePointer;
+	int rowNo = 0;
+	bool isFileOpen = true;
 
 	//arrays instead of variables
 
@@ -149,7 +154,10 @@ private:
 public:
 	HumanoidSkeleton()
 	{
-		
+		if (animationSequnence == "csv_walking_efficient")
+		{
+			openCSV("walking_efficient.csv");
+		}
 	}
 
 	void Update(float angle)
@@ -197,9 +205,13 @@ public:
 		{
 			readCSV("walking.csv", frame);
 		}
+		else if (animationSequnence == "csv_walking_efficient" and isFileOpen)
+		{
+			readCSV_Efficient(frame);
+		}
 		else if (animationSequnence == "jumping")
 		{
-			//Jumping animation through csv
+			
 			readCSV("jumping.csv", frame);
 
 		}
@@ -461,7 +473,7 @@ public:
 			std::cout << " Unable to open file !" << std::endl;
 			return false;
 		}
-
+		
 		std::string line;
 		int row = 0;
 		while (std::getline(file, line)) {
@@ -700,6 +712,257 @@ public:
 		}
 		file.close();
 		return true;
+	}
+	bool openCSV(const std::string& filename)
+	{
+		filePointer.open(filename);
+
+		if (!filePointer.is_open())
+		{
+			std::cout << " Unable to open file !" << std::endl;
+			isFileOpen = false;
+			return false;
+		}
+		std::string line;
+		if (std::getline(filePointer, line))
+		{
+			std::istringstream iss(line);
+			rowNo++;
+		}
+	}
+	bool readCSV_Efficient(int frame)
+	{
+		std::string line;
+		
+		if (std::getline(filePointer, line))
+		{
+			std::istringstream iss(line);
+			rowNo++;
+			int col = 0;
+			while (col < 60) {
+				std::string value;
+				if (!std::getline(iss, value, ',')) {
+					std::cerr << "Error: Unexpected end of line in CSV file." << std::endl;
+					return false;
+				}
+				float floatValue = std::stof(value);
+
+				switch (col) {
+					// Position and rotation for left leg
+				case 0:
+					leftLeg[0][0] = floatValue; // X position
+					break;
+				case 1:
+					leftLeg[0][1] = floatValue; // Y position
+					break;
+				case 2:
+					leftLeg[0][2] = floatValue; // Z position
+					break;
+				case 3:
+					leftLeg[1][0] = floatValue; // X rotation
+					break;
+				case 4:
+					leftLeg[1][1] = floatValue; // Y rotation
+					break;
+				case 5:
+					leftLeg[1][2] = floatValue; // Z rotation
+					break;
+
+
+				case 6:
+					leftLegJoint[0][0] = floatValue; // X position
+					break;
+				case 7:
+					leftLegJoint[0][1] = floatValue; // Y position
+					break;
+				case 8:
+					leftLegJoint[0][2] = floatValue; // Z position
+					break;
+				case 9:
+					leftLegJoint[1][0] = floatValue; // X rotation
+					break;
+				case 10:
+					leftLegJoint[1][1] = floatValue; // Y rotation
+					break;
+				case 11:
+					leftLegJoint[1][2] = floatValue; // Z rotation
+					break;
+
+					// Position and rotation for right leg
+				case 12:
+					rightLeg[0][0] = floatValue; // X position
+					break;
+				case 13:
+					rightLeg[0][1] = floatValue; // Y position
+					break;
+				case 14:
+					rightLeg[0][2] = floatValue; // Z position
+					break;
+				case 15:
+					rightLeg[1][0] = floatValue; // X rotation
+					break;
+				case 16:
+					rightLeg[1][1] = floatValue; // Y rotation
+					break;
+				case 17:
+					rightLeg[1][2] = floatValue; // Z rotation
+					break;
+
+				case 18:
+					rightLegJoint[0][0] = floatValue; // X position
+					break;
+				case 19:
+					rightLegJoint[0][1] = floatValue; // Y position
+					break;
+				case 20:
+					rightLegJoint[0][2] = floatValue; // Z position
+					break;
+				case 21:
+					rightLegJoint[1][0] = floatValue; // X rotation
+					break;
+				case 22:
+					rightLegJoint[1][1] = floatValue; // Y rotation
+					break;
+				case 23:
+					rightLegJoint[1][2] = floatValue; // Z rotation
+					break;
+
+					// Position and rotation for left arm
+				case 24:
+					leftArm[0][0] = floatValue; // X position
+					break;
+				case 25:
+					leftArm[0][1] = floatValue; // Y position
+					break;
+				case 26:
+					leftArm[0][2] = floatValue; // Z position
+					break;
+				case 27:
+					leftArm[1][0] = floatValue; // X rotation
+					break;
+				case 28:
+					leftArm[1][1] = floatValue; // Y rotation
+					break;
+				case 29:
+					leftArm[1][2] = floatValue; // Z rotation
+					break;
+
+					// Position and rotation for left arm joint
+				case 30:
+					leftArmJoint[0][0] = floatValue; // X position
+					break;
+				case 31:
+					leftArmJoint[0][1] = floatValue; // Y position
+					break;
+				case 32:
+					leftArmJoint[0][2] = floatValue; // Z position
+					break;
+				case 33:
+					leftArmJoint[1][0] = floatValue; // X rotation
+					break;
+				case 34:
+					leftArmJoint[1][1] = floatValue; // Y rotation
+					break;
+				case 35:
+					leftArmJoint[1][2] = floatValue; // Z rotation
+					break;
+
+
+
+
+				case 36:
+					rightArm[0][0] = floatValue; // X position
+					break;
+				case 37:
+					rightArm[0][1] = floatValue; // Y position
+					break;
+				case 38:
+					rightArm[0][2] = floatValue; // Z position
+					break;
+				case 39:
+					rightArm[1][0] = floatValue; // X rotation
+					break;
+				case 40:
+					rightArm[1][1] = floatValue; // Y rotation
+					break;
+				case 41:
+					rightArm[1][2] = floatValue; // Z rotation
+					break;
+
+					// Position and rotation for right arm joint
+				case 42:
+					rightArmJoint[0][0] = floatValue; // X position
+					break;
+				case 43:
+					rightArmJoint[0][1] = floatValue; // Y position
+					break;
+				case 44:
+					rightArmJoint[0][2] = floatValue; // Z position
+					break;
+				case 45:
+					rightArmJoint[1][0] = floatValue; // X rotation
+					break;
+				case 46:
+					rightArmJoint[1][1] = floatValue; // Y rotation
+					break;
+				case 47:
+					rightArmJoint[1][2] = floatValue; // Z rotation
+					break;
+
+
+
+					// Position and rotation for chest
+				case 48:
+					chest[0][0] = floatValue; // X position
+					break;
+				case 49:
+					chest[0][1] = floatValue; // Y position
+					break;
+				case 50:
+					chest[0][2] = floatValue; // Z position
+					break;
+				case 51:
+					chest[1][0] = floatValue; // X rotation
+					break;
+				case 52:
+					chest[1][1] = floatValue; // Y rotation
+					break;
+				case 53:
+					chest[1][2] = floatValue; // Z rotation
+					break;
+
+					// Position and rotation for body (pelvis)
+				case 54:
+					body[0][0] = floatValue; // X position
+					break;
+				case 55:
+					body[0][1] = floatValue; // Y position
+					break;
+				case 56:
+					body[0][2] = floatValue; // Z position
+					break;
+				case 57:
+					body[1][0] = floatValue; // X rotation
+					break;
+				case 58:
+					body[1][1] = floatValue; // Y rotation
+					break;
+				case 59:
+					body[1][2] = floatValue; // Z rotation
+					break;
+
+				default:
+					break;
+				}
+				col++;
+			}
+		}
+		else {
+			isFileOpen = false;
+			filePointer.close();
+		}
+
+		
 	}
 };
 
