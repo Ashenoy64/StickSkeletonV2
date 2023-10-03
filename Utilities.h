@@ -238,8 +238,16 @@ public:
 		else if (animationSequnence == "walking_calculation")
 		{
 			int stage = (int)(rot/20) % 9;
+				
+			/*
+			leftLeg = [-15, -30, 0, 15, 30, 0, -15, -30]
+			leftLegJoint = [0, 30, 0, 0, 15, 30, 45, 15]
 
-			
+			rightLeg = [30, 0, -15, -30, -15, -30, 0, 15]
+			rightLegJoint = [15, 30, 45, 15, 0, 30, 0, 0]
+
+			upDown = [-0.11, -0.26, -0.11, +0.11]
+			*/
 
 			if (stage == 1)
 			{
