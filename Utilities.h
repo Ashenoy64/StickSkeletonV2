@@ -12,7 +12,7 @@
 //csv_walking_efficient : uses efficient csv reading method
 
 
-#define animationSequnence "csv_walking_efficient"
+#define animationSequnence "walking_calculation"
 
 
 
@@ -123,6 +123,25 @@ void LookAt(float x, float y, float z)
 }
 
 
+void InitLight()
+{
+
+	GLfloat lightpos[] = { 0.0, 0.0, 15.0 };
+	GLfloat lightcolor[] = { 0.5, 0.5, 0.5 };
+	GLfloat ambcolor[] = { 0.2, 0.2, 0.2 };
+	GLfloat specular[] = { 1.0, 1.0, 1.0 };
+
+	glEnable(GL_LIGHTING);
+
+	glEnable(GL_LIGHT0);
+	glLightfv(GL_LIGHT0, GL_POSITION, lightpos);
+	glLightfv(GL_LIGHT0, GL_AMBIENT, ambcolor);
+	glLightfv(GL_LIGHT0, GL_DIFFUSE, lightcolor);
+	glLightfv(GL_LIGHT0, GL_SPECULAR, specular);
+
+	glEnable(GL_COLOR_MATERIAL); // tells opengl to maintain the original color of the object
+}
+
 class HumanoidSkeleton {
 private:
 	float rot=0;
@@ -166,7 +185,7 @@ public:
 		rot = angle;
 		++frame;
 
-		if (animationSequnence =="Walking")
+		if (animationSequnence =="walking")
 		{
 
 			//right leg walking motion: rotation along x axis
@@ -188,7 +207,8 @@ public:
 			rightArm[1][0] = -sin(rot * 0.01) * 30;
 			rightArmJoint[1][0] = -sin(rot * 0.01) * 40 < 0 ? -sin(rot * 0.01) * 40 : 0;
 
-
+			
+		
 			//limiting forward motion of the body
 			if (!(sin(angle) > -0.2 and sin(angle) < 0.2))
 				body[0][2] = -10 + (rot * 0.0035);
@@ -214,6 +234,106 @@ public:
 			
 			readCSV("jumping.csv", frame);
 
+		}
+		else if (animationSequnence == "walking_calculation")
+		{
+			int stage = (int)(rot/20) % 9;
+
+			
+
+			if (stage == 1)
+			{
+				leftLeg[1][0] = -15;
+				leftLegJoint[1][0] = 0;
+
+				rightLeg[1][0] = 30;
+				rightLegJoint[1][0] = 15;
+
+				body[0][1] = -0.11;
+
+
+				rightArm[1][0];
+				rightArmJoint[1][0];
+
+				
+
+			}
+			else if (stage == 2)
+			{
+				leftLeg[1][0] = -30;
+				leftLegJoint[1][0] = 30;
+
+				rightLeg[1][0] = 0;
+				rightLegJoint[1][0] = 30;
+
+				body[0][1] = -0.26;
+
+				
+			}
+			else if (stage == 3)
+			{
+				leftLeg[1][0] = 0;
+				leftLegJoint[1][0] = 0;
+
+				rightLeg[1][0] = -15;
+				rightLegJoint[1][0] = 45;
+
+				body[0][1] = -0.11;
+
+				
+			}
+			else if (stage == 4)
+			{
+				leftLeg[1][0] = 15;
+				leftLegJoint[1][0] = 0;
+
+				rightLeg[1][0] = -30;
+				rightLegJoint[1][0] = 15;
+
+				body[0][1] = +0.11;
+
+				
+			}
+			else if (stage == 5)
+			{
+				leftLeg[1][0] = 30;
+				leftLegJoint[1][0] = 15;
+
+				rightLeg[1][0] = -15;
+				rightLegJoint[1][0] = 0;
+
+				body[0][1] = -0.11;
+			}
+			else if (stage == 6)
+			{
+				leftLeg[1][0] = 0;
+				leftLegJoint[1][0] = 30;
+
+				rightLeg[1][0] = -30;
+				rightLegJoint[1][0] = 30;
+
+				body[0][1] = -0.26;
+			}
+			else if (stage == 7)
+			{
+				leftLeg[1][0] = -15;
+				leftLegJoint[1][0] = 45;
+
+				rightLeg[1][0] = 0;
+				rightLegJoint[1][0] = 0;
+
+				body[0][1] = -0.11;
+			}
+			else if (stage == 8)
+			{
+				leftLeg[1][0] = -30;
+				leftLegJoint[1][0] = 15;
+
+				rightLeg[1][0] = 15;
+				rightLegJoint[1][0] = 0;
+
+				body[0][1] = 0.11;
+			}
 		}
 		else {
 			//stopped Animation
@@ -971,5 +1091,6 @@ HumanoidSkeleton S;
 
 void SequeneceManager(float angle)
 {
+	InitLight();
 	S.Update(angle);
 }

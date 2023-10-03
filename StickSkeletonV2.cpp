@@ -128,9 +128,7 @@ void Display()
             0.0f, 1.0f, 0.0f
         );
         glTranslatef(tx, ty, tz);
-        tx = 0;
-        ty = 0;
-        tz = 0;
+   
     }
     else {
         LookAt(3, 6, 9);
