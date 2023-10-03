@@ -4,7 +4,7 @@
 #include "Utilities.h"
 
 
-#define EDITING true
+#define EDITING false
 #define PI 3.14159265358979323846
 
 float angle = 0.0f;
@@ -119,7 +119,7 @@ void sphereMouseEvent(int button, int state, int x, int y)
 void Display()
 {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        ApplyPerspectiveProjection();
+       ApplyPerspectiveProjection();
     if (EDITING)
     {
         gluLookAt(
@@ -133,7 +133,9 @@ void Display()
         tz = 0;
     }
     else {
-        LookAt(3, 6, 9);
+        //LookAt(3, 6, 9);
+        //glRotatef(90, 0, 1, 0);
+        LookAt(40, 0, 0);
     }
     SequeneceManager(angle);
     

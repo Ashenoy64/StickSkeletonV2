@@ -8,7 +8,7 @@
 
 
 
-#define animationSequnence "jumping"
+#define animationSequnence "Walking"
 
 
 
@@ -127,7 +127,6 @@ private:
 	
 
 
-
 	//arrays instead of variables
 
 	float leftLeg[2][3]={ {0.0,0.0,0.0},{0.0,0.0,0.0} };
@@ -161,14 +160,13 @@ public:
 		if (animationSequnence =="Walking")
 		{
 
-
 			//right leg walking motion: rotation along x axis
-			rightLeg[1][0] = sin(rot * 0.01) * 30;
+			rightLeg[1][0] = sin(rot * 0.01) * 25;
 			rightLegJoint[1][0] = -sin(rot * 0.01) * 30 > 0 ? -sin(rot * 0.01) * 30 : -sin(rot * 0.01) * 5;
 
 
 			//left leg walking motion: rotation along x axis
-			leftLeg[1][0] = -sin(rot * 0.01) * 30;
+			leftLeg[1][0] = -sin(rot * 0.01) * 25;
 			leftLegJoint[1][0] = sin(rot * 0.01) * 30 > 0 ? sin(rot * 0.01) * 30 : sin(rot * 0.01) * 5;
 
 
@@ -184,15 +182,11 @@ public:
 
 			//limiting forward motion of the body
 			if (!(sin(angle) > -0.2 and sin(angle) < 0.2))
-				body[0][2] = -10 + (rot * 0.004);
+				body[0][2] = -10 + (rot * 0.01);
 
 
-			body[0][1] = -sin(rot * 0.01) * 0.05;
+			body[0][1] = -sin(rot * 0.01) * 0.001;
 			chest[1][1] = -sin(rot * 0.01) * 10;
-
-
-			
-
 
 		}
 		else if (animationSequnence == "jumping")
@@ -215,8 +209,18 @@ public:
 	{
 
 
-
 		Objects Chest(0,0,0,0,0,0,1.5,0.5,0.5,true), Abdomen(0,-0.68,0,0,0,0,1.25,0.85,0.5,true), Pelvis(0, -1.5, 0, 0, 0, 0, 1.0, 0.75, 0.5, true);
+		
+		glPushMatrix();
+		glColor3f(1,1,1);
+		glLineWidth(5.0);
+		glBegin(GL_LINES);
+		glVertex3d(0, -5.0, -50);
+		glVertex3d(0, -5.0, 50);
+		glEnd();
+		glPopMatrix();
+		//std::cout << "hello"<<std::endl;
+
 		glPushMatrix();
 			AnimatedTransformations(0, 1, 0, 1, 1, 1);
 			glColor3f(0.3, 0.1, 0.0);
