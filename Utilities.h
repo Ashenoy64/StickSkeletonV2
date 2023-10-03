@@ -249,6 +249,9 @@ public:
 			upDown = [-0.11, -0.26, -0.11, +0.11]
 			*/
 
+			if (!(sin(angle) > -0.2 and sin(angle) < 0.2))
+				body[0][2] = -10 + (2.276/13 * rot / 20);
+
 			if (stage == 1)
 			{
 				leftLeg[1][0] = -15;
