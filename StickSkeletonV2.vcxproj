@@ -146,6 +146,8 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="jumping.csv" />
+    <None Include="walking.csv" />
+    <None Include="walking_efficient.csv" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
