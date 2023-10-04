@@ -131,9 +131,9 @@ void Display()
    
     }
     else {
-        //LookAt(3, 6, 9);
+        LookAt(3, 6, 9);
         //glRotatef(90, 0, 1, 0);
-        LookAt(40, 0, 0);
+        //LookAt(40, 0, 0);
     }
     SequeneceManager(angle);
     
