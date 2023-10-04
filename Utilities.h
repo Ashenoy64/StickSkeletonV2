@@ -12,8 +12,8 @@
 //csv_walking_efficient : uses efficient csv reading method
 
 
-#define animationSequnence "walking_calculation"
 
+#define animationSequnence "walking_calculation"
 
 
 class Objects
@@ -147,10 +147,11 @@ private:
 	float rot=0;
 
 	float frame = 1;
-	
+
 	std::ifstream filePointer;
 	int rowNo = 0;
 	bool isFileOpen = true;
+
 
 	//arrays instead of variables
 
@@ -187,29 +188,41 @@ public:
 
 		if (animationSequnence =="walking")
 		{
+			//variables to fine tune the movements: 
+			float legFact = 0.018;
+			float armFact = 0.018;
+			float speedMul = 0.018;
+			float riseHeight = 0.1, riseSpeed = 0.019 * 2;
+			float chestRotate = 0.018;
+
 
 			//right leg walking motion: rotation along x axis
-			rightLeg[1][0] = sin(rot * 0.01) * 30;
-			rightLegJoint[1][0] = -sin(rot * 0.01) * 30 > 0 ? -sin(rot * 0.01) * 30 : -sin(rot * 0.01) * 5;
-
+			rightLeg[1][0] = sin(rot * legFact) * 27;
+			rightLegJoint[1][0] = -sin(rot * legFact) * 30 > 0 ? -sin(rot * legFact) * 30 : -sin(rot * legFact) * 5;
 
 			//left leg walking motion: rotation along x axis
-			leftLeg[1][0] = -sin(rot * 0.01) * 30;
-			leftLegJoint[1][0] = sin(rot * 0.01) * 30 > 0 ? sin(rot * 0.01) * 30 : sin(rot * 0.01) * 5;
-
+			leftLeg[1][0] = -sin(rot * legFact) * 27;
+			leftLegJoint[1][0] = sin(rot * legFact) * 30 > 0 ? sin(rot * legFact) * 30 : sin(rot * legFact) * 5;
 
 			//left arm walking motion: rotation along x axis
-			leftArm[1][0] = sin(rot * 0.01) * 30;
-			leftArmJoint[1][0] = sin(rot * 0.01) * 40 < 0 ? sin(rot * 0.01) * 40 : 0;
-
+			leftArm[1][0] = sin(rot * armFact) * 35;
+			leftArmJoint[1][0] = sin(rot * armFact) * 40 < 0 ? sin(rot * armFact) * 40 : 0;
 
 			//right arm walking motion: rotation along x axis
-			rightArm[1][0] = -sin(rot * 0.01) * 30;
-			rightArmJoint[1][0] = -sin(rot * 0.01) * 40 < 0 ? -sin(rot * 0.01) * 40 : 0;
+			rightArm[1][0] = -sin(rot * armFact) * 35;
+			rightArmJoint[1][0] = -sin(rot * armFact) * 40 < 0 ? -sin(rot *armFact) * 40 : 0;
 
 			
 		
-			//limiting forward motion of the body
+		
+			if (!(sin(angle) > -0.001 and sin(angle) < 0.001)) {
+				body[0][2] = -10 + (rot * speedMul);
+			}
+
+			body[0][1] = sin(rot * riseSpeed) * riseHeight;
+	
+			chest[1][1] = -sin(rot *chestRotate) * 10;
+
 			if (!(sin(angle) > -0.2 and sin(angle) < 0.2))
 				body[0][2] = -10 + (rot * 0.0035);
 
@@ -360,8 +373,18 @@ public:
 	{
 
 
-
 		Objects Chest(0,0,0,0,0,0,1.5,0.5,0.5,true), Abdomen(0,-0.68,0,0,0,0,1.25,0.85,0.5,true), Pelvis(0, -1.5, 0, 0, 0, 0, 1.0, 0.75, 0.5, true);
+		
+		glPushMatrix();
+		glColor3f(1,1,1);
+		glLineWidth(5.0);
+		glBegin(GL_LINES);
+		glVertex3d(0, -4.9, -50);
+		glVertex3d(0, -4.9, 50);
+		glEnd();
+		glPopMatrix();
+		//std::cout << "hello"<<std::endl;
+
 		glPushMatrix();
 			AnimatedTransformations(0, 1, 0, 1, 1, 1);
 			glColor3f(0.3, 0.1, 0.0);
