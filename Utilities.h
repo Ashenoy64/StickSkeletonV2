@@ -264,7 +264,11 @@ public:
 			*/
 
 			if (!(sin(angle) > -0.2 and sin(angle) < 0.2))
+<<<<<<< HEAD
 				body[0][2] = -10 + (2.276/4 * rot / 35);
+=======
+				body[0][2] = -10 + (2.276/7 * rot / 20);
+>>>>>>> f00ac934a4c71e4c7145978a3197cca10a7be981
 
 			if (stage == 1)
 			{
@@ -287,6 +291,24 @@ public:
 			}
 			else if (stage == 2)
 			{
+				leftLeg[1][0] = -18.5;
+				leftLegJoint[1][0] = 7.5;
+
+				rightLeg[1][0] = 22.5;
+				rightLegJoint[1][0] = 18.5;
+
+				body[0][1] = -0.14;
+
+
+				rightArm[1][0] = -11.25;
+				rightArmJoint[1][0] = -26.25;
+
+				leftArm[1][0] = 11.25;
+				leftArmJoint[1][0] = -22.5;
+
+			}
+			else if (stage == 3)
+			{
 				leftLeg[1][0] = -22.5;
 				leftLegJoint[1][0] = 15;
 
@@ -303,7 +325,7 @@ public:
 				leftArmJoint[1][0] = -15;
 				
 			}
-			else if (stage == 3)
+			else if (stage == 4)
 			{
 				leftLeg[1][0] = -30;
 				leftLegJoint[1][0] = 30;
@@ -321,7 +343,25 @@ public:
 				leftArmJoint[1][0] = 0;
 				
 			}
-			else if (stage == 4)
+			else if (stage == 5) 
+			{
+				leftLeg[1][0] = -22.5;
+				leftLegJoint[1][0] = 22.5;
+
+				rightLeg[1][0] = -3.5;
+				rightLegJoint[1][0] = 33.5;
+
+				body[0][1] = -0.22;
+
+				rightArm[1][0] = 4;
+				rightArmJoint[1][0] = -11.5;
+
+				leftArm[1][0] = -4;
+				leftArmJoint[1][0] = -4;
+
+
+			}
+			else if (stage == 6)
 			{
 				leftLeg[1][0] = -15;
 				leftLegJoint[1][0] = 15;
@@ -339,7 +379,25 @@ public:
 
 
 			}
-			else if (stage == 5)
+			else if (stage == 7)
+			{
+				leftLeg[1][0] = -7.5;
+				leftLegJoint[1][0] = 7.5;
+
+				rightLeg[1][0] = -7.5;
+				rightLegJoint[1][0] = 42;
+
+				body[0][1] = -0.145;
+
+				rightArm[1][0] = 11.5;
+				rightArmJoint[1][0] = -4;
+
+				leftArm[1][0] = -11.5;
+				leftArmJoint[1][0] = -11.5;
+
+
+			}
+			else if (stage == 8)
 			{
 				leftLeg[1][0] = 0;
 				leftLegJoint[1][0] = 0;
@@ -357,7 +415,7 @@ public:
 
 				
 			}
-			else if (stage == 6)
+			else if (stage == 9)
 			{
 				leftLeg[1][0] = 7.5;
 				leftLegJoint[1][0] = 0;
@@ -375,7 +433,25 @@ public:
 
 
 			}
-			else if (stage == 7)
+			else if (stage == 10)
+			{
+				leftLeg[1][0] = 11.5;
+				leftLegJoint[1][0] = 0;
+
+				rightLeg[1][0] = -27.5;
+				rightLegJoint[1][0] = 22.5;
+
+				body[0][1] = 0.055;
+
+				rightArm[1][0] = 26;
+				rightArmJoint[1][0] = -11.5;
+
+				leftArm[1][0] = -26;
+				leftArmJoint[1][0] = -4;
+
+
+				}
+			else if (stage == 11)
 			{
 				leftLeg[1][0] = 15;
 				leftLegJoint[1][0] = 0;
@@ -393,7 +469,23 @@ public:
 
 				
 			}
-			else if (stage == 8)
+			else if (stage == 12)
+			{
+				leftLeg[1][0] = 18.5;
+				leftLegJoint[1][0] = 3.75;
+
+				rightLeg[1][0] = -26;
+				rightLegJoint[1][0] = 11;
+
+				body[0][1] = -0.05;
+
+				rightArm[1][0] = 30;
+				rightArmJoint[1][0] = -11.5;
+
+				leftArm[1][0] = -30;
+				leftArmJoint[1][0] = -4;
+			}
+			else if (stage == 13)
 			{
 				leftLeg[1][0] = 22.5;
 				leftLegJoint[1][0] = 7.5;
@@ -408,8 +500,24 @@ public:
 
 				leftArm[1][0] = -30;
 				leftArmJoint[1][0] = -7.5;
+			}
+			else if (stage == 14)
+			{
+				leftLeg[1][0] = 26;
+				leftLegJoint[1][0] = 11.25;
+
+				rightLeg[1][0] = -18;
+				rightLegJoint[1][0] = 4;
+
+				body[0][1] = -0.05;
+
+				rightArm[1][0] = 30;
+				rightArmJoint[1][0] = -4;
+
+				leftArm[1][0] = -30;
+				leftArmJoint[1][0] = -11.25;
 				}
-			else if (stage == 9)
+			else if (stage == 15)
 			{
 				leftLeg[1][0] = 30;
 				leftLegJoint[1][0] = 15;
@@ -425,7 +533,23 @@ public:
 				leftArm[1][0] = -30;
 				leftArmJoint[1][0] = -15;
 			}
-			else if (stage == 10)
+			else if (stage == 16)
+			{
+				leftLeg[1][0] = 22.5;
+				leftLegJoint[1][0] = 18.5;
+
+				rightLeg[1][0] = -18.5;
+				rightLegJoint[1][0] = 7.5;
+
+				body[0][1] = -0.145;
+
+				rightArm[1][0] = 25.5;
+				rightArmJoint[1][0] = 0;
+
+				leftArm[1][0] = -27.5;
+				leftArmJoint[1][0] = -15;
+			}
+			else if (stage == 17)
 			{
 				leftLeg[1][0] = 15;
 				leftLegJoint[1][0] = 22.5;
@@ -440,8 +564,24 @@ public:
 
 				leftArm[1][0] = -22.5;
 				leftArmJoint[1][0] = -15;
-				}
-			else if (stage == 11)
+			}
+			else if (stage == 18)
+			{
+				leftLeg[1][0] = 7.5;
+				leftLegJoint[1][0] = 27.5;
+
+				rightLeg[1][0] = -27.5;
+				rightLegJoint[1][0] = 22.5;
+
+				body[0][1] = -0.22;
+
+				rightArm[1][0] = 18;
+				rightArmJoint[1][0] = 0;
+
+				leftArm[1][0] = -18;
+				leftArmJoint[1][0] = -15;
+			}
+			else if (stage == 19)
 			{
 				leftLeg[1][0] = 0;
 				leftLegJoint[1][0] = 30;
@@ -457,7 +597,23 @@ public:
 				leftArm[1][0] = -15;
 				leftArmJoint[1][0] = -15;
 			}
-			else if (stage == 12)
+			else if (stage == 20)
+			{
+				leftLeg[1][0] = -4;
+				leftLegJoint[1][0] = 37.5;
+
+				rightLeg[1][0] = -15;
+				rightLegJoint[1][0] = 15;
+
+				body[0][1] = -0.185;
+
+				rightArm[1][0] = -15;
+				rightArmJoint[1][0] = -7.5;
+
+				leftArm[1][0] = -7.5;
+				leftArmJoint[1][0] = -15;
+			}
+			else if (stage == 21)
 			{
 				leftLeg[1][0] = -7.5;
 				leftLegJoint[1][0] = 37.5;
@@ -472,8 +628,24 @@ public:
 
 				leftArm[1][0] = -7.5;
 				leftArmJoint[1][0] = -15;
-				}
-			else if (stage == 13)
+			}
+			else if (stage == 22)
+			{
+				leftLeg[1][0] = -11.5;
+				leftLegJoint[1][0] = 41.5;
+
+				rightLeg[1][0] = -7.5;
+				rightLegJoint[1][0] = 7.5;
+
+				body[0][1] = -0.11;
+
+				rightArm[1][0] = -15;
+				rightArmJoint[1][0] = -11.5;
+
+				leftArm[1][0] = -4;
+				leftArmJoint[1][0] = -15;
+			}
+			else if (stage == 23)
 			{
 				leftLeg[1][0] = -15;
 				leftLegJoint[1][0] = 45;
@@ -489,7 +661,24 @@ public:
 				leftArm[1][0] = 0;
 				leftArmJoint[1][0] = -15;
 			}
-			else if (stage == 14)
+			else if (stage == 24)
+			{
+				leftLeg[1][0] = -18.5;
+				leftLegJoint[1][0] = 37.5;
+
+				rightLeg[1][0] = 3.75;
+				rightLegJoint[1][0] = 0;
+
+				body[0][1] = -0.05;
+
+
+				rightArm[1][0] = -18.5;
+				rightArmJoint[1][0] = -15;
+
+				leftArm[1][0] = 3.75;
+				leftArmJoint[1][0] = -18.5;
+			}
+			else if (stage == 25)
 			{
 				leftLeg[1][0] = -22.5;
 				leftLegJoint[1][0] = 30;
@@ -505,8 +694,25 @@ public:
 
 				leftArm[1][0] = 7.5;
 				leftArmJoint[1][0] = -22.5;
+			}
+			else if (stage == 26)
+			{
+				leftLeg[1][0] = -27.5;
+				leftLegJoint[1][0] = 22.5;
+
+				rightLeg[1][0] = 11.5;
+				rightLegJoint[1][0] = 0;
+
+				body[0][1] = 0.5;
+
+
+				rightArm[1][0] = -27.5;
+				rightArmJoint[1][0] = -15;
+
+				leftArm[1][0] = 11.5;
+				leftArmJoint[1][0] = -27.5;
 				}
-			else if (stage == 15)
+			else if (stage == 27)
 			{
 				leftLeg[1][0] = -30;
 				leftLegJoint[1][0] = 15;
@@ -523,7 +729,23 @@ public:
 				leftArm[1][0] = 15;
 				leftArmJoint[1][0] = -30;
 			}
-			else if(stage == 16){
+			else if (stage == 28) {
+				leftLeg[1][0] = -27.5;
+				leftLegJoint[1][0] = 11.5;
+
+				rightLeg[1][0] = 18.5;
+				rightLegJoint[1][0] = 3.75;
+
+				body[0][1] = 0.55;
+
+
+				rightArm[1][0] = -27.5;
+				rightArmJoint[1][0] = -18.5;
+
+				leftArm[1][0] = 15;
+				leftArmJoint[1][0] = -30;
+			}
+			else if(stage == 29){
 				leftLeg[1][0] = -22.5;
 				leftLegJoint[1][0] = 7.5;
 
@@ -538,8 +760,6 @@ public:
 
 				leftArm[1][0] = 15;
 				leftArmJoint[1][0] = -30;
-
-
 			}
 
 		}
