@@ -13,7 +13,7 @@
 
 
 
-#define animationSequnence "walking_calculation"
+#define animationSequnence "test"
 
 
 class Objects
@@ -147,6 +147,7 @@ private:
 	float rot=0;
 
 	float frame = 1;
+	float count = 0;
 
 	std::ifstream filePointer;
 	int rowNo = 0;
@@ -169,6 +170,8 @@ private:
 
 	float chest[2][3] = { {0,0,0},{0,0,0} };
 	float body[2][3] = { {0,0,0},{0,0,0} };
+
+	//float foot[2][3] = { {0,0,0},{0,0,0} };
 	
 
 public:
@@ -180,7 +183,7 @@ public:
 		}
 	}
 
-	void Update(float angle)
+	void Update(float angle, float a1, float a2, float a3)
 	{
 
 		rot = angle;
@@ -237,6 +240,64 @@ public:
 		else if (animationSequnence == "csv_walking")
 		{
 			readCSV("walking.csv", frame);
+		}
+
+
+		else if (animationSequnence == "test")
+		{
+			
+			float radConvert = 3.14159 / 180;
+
+			float ulAngle =a3*10;
+			float llAngle = a1*10;
+			float hAngle = 0;
+			//float footAngle = -llAngle -ulAngle - hAngle;
+
+			float lHeight = 2.8;
+			float lowerLegHeight = -1.2;
+			float hipHeight = -1;
+
+			float hipHoz = 4;
+			float upHoz = 3.4;
+			float downHoz = a2;
+
+			body[1][0] = hAngle;
+			leftLeg[1][0] = ulAngle;
+			rightLeg[1][0] = ulAngle;
+			//foot[1][0] = footAngle;
+
+
+			leftLegJoint[1][0] = llAngle;
+			rightLegJoint[1][0] = llAngle;
+			/*if (count == 0) {
+				count += 1;
+				body[0][1] -= 3 + 3 - 3*(cos(body[1][0]*radConvert)) - 1.5 * (cos(leftLegJoint[1][0] * radConvert) + cos(leftLeg[1][0] * radConvert));
+			}*/
+			
+			float hipDisplacement = (hipHeight - hipHeight * cos(body[1][0] * radConvert));
+			float upperLegDisplacement = -(lHeight - lHeight * cos((leftLeg[1][0] + body[1][0]) * radConvert));
+			float lowerLegDisplacement = (lowerLegHeight - lowerLegHeight * cos((leftLegJoint[1][0] + leftLeg[1][0] + body[1][0]) * radConvert));
+			body[0][1] = -4.1 + upperLegDisplacement + lowerLegDisplacement + hipDisplacement;
+			body[0][2] = hipHoz * sin(body[1][0] * radConvert) + upHoz * sin((leftLeg[1][0]) * radConvert) + downHoz * sin((leftLegJoint[1][0] + leftLeg[1][0] + body[1][0]) * radConvert);
+
+
+			/*std::cout << " Upper Leg Angle : " << std::endl;
+			std::cout << a1*10 << std::endl;
+			std::cout << "Lower Leg Angle :" << std::endl;
+			std::cout << a2*10 << std::endl;
+			std::cout << "Hip Angle :" << std::endl;
+			std::cout << a3*10 << std::endl;*/
+
+			std::cout << "Angle : " << std::endl;
+			std::cout << a1 * 10 << std::endl;
+			std::cout << "Modifier :" << std::endl;
+			std::cout << a2<< std::endl;
+			std::cout << "Coords :" << std::endl;
+			std::cout << body[0][2] << std::endl;
+
+
+
+
 		}
 		else if (animationSequnence == "csv_walking_efficient" and isFileOpen)
 		{
@@ -379,15 +440,37 @@ public:
 		glColor3f(1,1,1);
 		glLineWidth(5.0);
 		glBegin(GL_LINES);
-		glVertex3d(0, -4.9, -50);
-		glVertex3d(0, -4.9, 50);
+		//for (float x = -30; x = x + 0.1; x < 30) {
+
+		glVertex3d(0, -5.5, -50);
+		glVertex3d(0, -5.5, 50);
+		//}
+		glEnd();
+		glPopMatrix();
+		glPushMatrix();
+		glTranslatef(0, -8.91, 0);
+		glRotatef(90,1,0,0);
+		glColor3f(1.0f, 1.0f, 1.0f);
+		glRectf(-25, 25, 25, -25);
+		glPopMatrix();
+		glPushMatrix();
+		glTranslatef(0, -8.9, 0);
+		glRotatef(90, 1, 0, 0);
+		glColor3f(0.0f, 1.0f, 0.0f);
+		glRectf(-1.0, 1.0, 1, -1);
+		glPopMatrix();
+		glPushMatrix();
+		glColor3f(0, 0, 1);
+		glPointSize(5.0);
+		glBegin(GL_POINTS);
+		glVertex3d(0, -5.0, 0);
 		glEnd();
 		glPopMatrix();
 		//std::cout << "hello"<<std::endl;
 
 		glPushMatrix();
 			AnimatedTransformations(0, 1, 0, 1, 1, 1);
-			glColor3f(0.3, 0.1, 0.0);
+			glColor3f(0, 1, 0);
 			glPushMatrix();
 			
 			float angle = sin(rot * 0.01);
@@ -401,10 +484,10 @@ public:
 				AnimatedTransformations(chest[0][0], chest[0][1],chest[0][2],1,1,1);
 				AnimatedRotation(Chest, chest[1][0], chest[1][1],chest[1][2] ,  1);
 					
-					glColor3f(0.3, 0.1, 0.2);
+					glColor3f(0, 1, 0);
 					Chest.setObject(); //Abdomen and Arms are the child 
 						glPushMatrix();
-							glColor3f(0.3, 0.3, 0.1);
+							glColor3f(1, 0, 0);
 							Abdomen.setObject();
 						glPopMatrix();
 
@@ -491,7 +574,7 @@ public:
 					//AnimatedRotation(ArmJoint,leftHandJoint, 0, 0, 1);
 
 
-					glColor3f(0.35, 0.21, 0.24);
+					glColor3f(1, 1, 1);
 					ArmJoint.setObject();			//Elbow Joint
 					glPushMatrix();
 						glColor3f(0.2, 0.5, 0.6);
@@ -533,7 +616,7 @@ public:
 					
 
 					glPushMatrix();
-						glColor3f(0.35, 0.21, 0.24);
+						glColor3f(1, 1, 1);
 						ArmJoint.setObject(); //Elbow Joint
 							glPushMatrix();
 								glColor3f(0.2, 0.5, 0.6);
@@ -551,7 +634,8 @@ public:
 		Objects Thighs(0, -0.2, 0, 0, 0, 0, 1.1, 0.5, 0.5, true), 
 			Leg1(-0.12, -1.2, 0, 0, 0, 0, 0.5, 1.5, 0.5, true), 
 			LegJoint(-0.12, -2.15, 0, 0, 0, 0, 0.3, 0.3, 0.3, false), 
-			Leg2(-0.12, -3.1, 0, 0, 0, 0, 0.5, 1.5, 0.5, true);
+			Leg2(-0.12, -3.1, 0, 0, 0, 0, 0.5, 1.5, 0.5, true),
+			Foot(-0.12, -3.95, 0.25, 0, 0, 0, 0.5, 0.25, 1, true);
 
 
 		glPushMatrix();
@@ -564,7 +648,7 @@ public:
 		glColor3f(0.4, 0.1, 0.9);
 			Thighs.setObject();
 				glPushMatrix();
-					glColor3f(0.35, 0.21, 0.24);
+					glColor3f(0.36, 0.67, 0.92);
 					Leg1.setObject();		//Upper leg
 					glPushMatrix();
 						//Knee Joint Animation Here
@@ -573,11 +657,16 @@ public:
 					AnimatedRotation(LegJoint,leftLegJoint[1][0],leftLegJoint[1][1], leftLegJoint[1][2],1);
 					//AnimatedRotation(LegJoint,leftLegJoint, 0, 0, 1);
 						
-						glColor3f(0.2, 0.5, 0.6);
+						glColor3f(1, 1, 1);
 						LegJoint.setObject();   //Knee JOint
 						glPushMatrix();
-							glColor3f(0.35, 0.21, 0.24);
+						glColor3f(0.36, 0.67, 0.92);
 							Leg2.setObject();     //Lower Leg
+							//glPushMatrix();
+							//	AnimatedRotation(Foot, foot[1][0], 0, 0, 1);
+							//	glColor3f(1, 0, 0);
+							//	Foot.setObject();     //Lower Leg
+							//glPopMatrix();
 						glPopMatrix();
 					glPopMatrix();
 				glPopMatrix();
@@ -585,7 +674,11 @@ public:
 	}
 	void makeRightLeg()
 	{
-		Objects Thighs(0, -0.2, 0, 0, 0, 0, 1.1, 0.5, 0.5, true), Leg1(0.12, -1.2, 0, 0, 0, 0, 0.5, 1.5, 0.5, true), LegJoint(0.12, -2.15, 0, 0, 0, 0, 0.3, 0.3, 0.3, false), Leg2(0.12, -3.1, 0, 0, 0, 0, 0.5, 1.5, 0.5, true);
+		Objects Thighs(0, -0.2, 0, 0, 0, 0, 1.1, 0.5, 0.5, true),
+				Leg1(0.12, -1.2, 0, 0, 0, 0, 0.5, 1.5, 0.5, true), 
+				LegJoint(0.12, -2.15, 0, 0, 0, 0, 0.3, 0.3, 0.3, false), 
+				Leg2(0.12, -3.1, 0, 0, 0, 0, 0.5, 1.5, 0.5, true), 
+				Foot(0.12, -3.95, 0.25, 0, 0, 0, 0.5, 0.25, 1, true);;
 		glPushMatrix();
 		AnimatedTransformations(0.5, -1.95, 0, 1, 1, 1);
 		AnimatedTransformations(rightLeg[0][0], rightLeg[0][1], rightLeg[0][2],1,1,1);
@@ -595,7 +688,7 @@ public:
 		glColor3f(0.4, 0.1, 0.9);
 			Thighs.setObject();
 				glPushMatrix();
-					glColor3f(0.35, 0.21, 0.24);
+				glColor3f(0.36, 0.67, 0.92);
 					Leg1.setObject();		//Upper leg
 					glPushMatrix();
 						//Knee Joint Animation Here
@@ -606,11 +699,16 @@ public:
 					//AnimatedRotation(LegJoint, rightLegJoint, 0, 0, 1);
 
 
-						glColor3f(0.2, 0.5, 0.6);
+						glColor3f(1, 1, 1);
 						LegJoint.setObject();  //Knee Joint
 						glPushMatrix();
-							glColor3f(0.35, 0.21, 0.24);
+						glColor3f(0.36, 0.67, 0.92);
 							Leg2.setObject(); //Lower Leg
+							//glPushMatrix();
+							//	AnimatedRotation(Foot, foot[1][0], 0, 0, 1);
+							//	glColor3f(1, 0, 0);
+							//	Foot.setObject();     //Lower Leg
+							//glPopMatrix();
 						glPopMatrix();
 					glPopMatrix();
 				glPopMatrix();
@@ -1123,8 +1221,8 @@ public:
 HumanoidSkeleton S;
 
 
-void SequeneceManager(float angle)
+void SequeneceManager(float angle, float ty, float modifier, float a2)
 {
 	InitLight();
-	S.Update(angle);
+	S.Update(angle, ty, modifier, a2);
 }
