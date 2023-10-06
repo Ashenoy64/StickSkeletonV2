@@ -264,7 +264,7 @@ public:
 			*/
 
 			if (!(sin(angle) > -0.2 and sin(angle) < 0.2))
-				body[0][2] = -10 + (2.276/4 * rot / 20);
+				body[0][2] = -10 + (2.276/4 * rot / 35);
 
 			if (stage == 1)
 			{
