@@ -10,6 +10,8 @@
 //walking : uses code calculations
 //csv_walking : uses inefficient method to read csv for animation
 //csv_walking_efficient : uses efficient csv reading method
+//walking_calculation : 30 stages animated
+
 
 
 
@@ -59,8 +61,6 @@ public:
 		posY = y;
 		posZ = z;
 	}
-
-
 
 	void setObject()
 	{
@@ -251,7 +251,7 @@ public:
 		else if (animationSequnence == "walking_calculation")
 		{
 			//int stage = (int)(rot/20) % 9;
-			int stage = (int)(rot/20) % 17;
+			int stage = (int)(rot/20) % 30;
 			//int stage = 3;
 			/*
 			leftLeg = [-15, -30, 0, 15, 30, 0, -15, -30]
@@ -264,11 +264,8 @@ public:
 			*/
 
 			if (!(sin(angle) > -0.2 and sin(angle) < 0.2))
-<<<<<<< HEAD
 				body[0][2] = -10 + (2.276/4 * rot / 35);
-=======
-				body[0][2] = -10 + (2.276/7 * rot / 20);
->>>>>>> f00ac934a4c71e4c7145978a3197cca10a7be981
+
 
 			if (stage == 1)
 			{
