@@ -5,6 +5,7 @@
 #include <fstream>
 #include <sstream>
 #include <string>
+#include <cmath>
 
 
 //walking : uses code calculations
@@ -148,6 +149,7 @@ private:
 
 	float frame = 1;
 	float count = 0;
+	int stageNumber = 0;
 
 	std::ifstream filePointer;
 	int rowNo = 0;
@@ -171,7 +173,7 @@ private:
 	float chest[2][3] = { {0,0,0},{0,0,0} };
 	float body[2][3] = { {0,0,0},{0,0,0} };
 
-	//float foot[2][3] = { {0,0,0},{0,0,0} };
+	float foot[2][3] = { {0,0,0},{0,0,0} };
 	
 
 public:
@@ -183,7 +185,50 @@ public:
 		}
 	}
 
-	void Update(float angle, float a1, float a2, float a3)
+	double lerp(double value1, double value2, double t) {
+		return (1.0 - t) * value1 + t * value2;
+	}
+
+	double cubicEaseOut(double t) {
+		return 1.0 - pow(1.0 - t, 3.0);
+	}
+
+	// Interpolate using cubic easing-out
+	double interpolateWithEaseOut(double value1, double value2, double t) {
+		return value1 + cubicEaseOut(t) * (value2 - value1);
+	}
+
+	double cubicEaseIn(double t, double power = 2.0) {
+		return pow(t, power);
+	}
+
+	// Interpolate using modified cubic easing-in
+	double interpolateWithEaseIn(double value1, double value2, double t, double power = 2.0) {
+		return value1 + cubicEaseIn(t, power) * (value2 - value1);
+	}
+
+	double cubicEaseInOut(double t, double speed = 1.0) {
+		t = clip(t * speed, 0.0, 1.0);  // Ensure t is within [0, 1]
+
+		if (t < 0.5) {
+			return 4.0 * t * t * t;
+		}
+		else {
+			double f = ((2.0 * t) - 2.0);
+			return 0.5 * f * f * f + 1.0;
+		}
+	}
+
+	// Interpolate using cubic easing-in and easing-out with speed control
+	double interpolateWithEaseInOut(double value1, double value2, double t, double speed = 1.0) {
+		return value1 + cubicEaseInOut(t, speed) * (value2 - value1);
+	}
+
+	float clip(float value, float minValue, float maxValue) {
+		return std::min(std::max(value, minValue), maxValue);
+	}
+
+	void Update(float angle, float a1, float a2, float a3, bool dynamic)
 	{
 
 		rot = angle;
@@ -246,54 +291,126 @@ public:
 		else if (animationSequnence == "test")
 		{
 			
+
+			float stage[6][7] = { { 0,0,0, -4.1, 0,0,0},{ -27 ,80 ,-60, -4.95, 1.05,-72,22.5}, {-4,30,-30,-4.3,0.7,-15,50}, {0,5,-10,-3,0,50,25},{0,0,-5,-1,0,90,0},{ 0,0,0, -4.1, 0,0,0} };
+			float rate[5] = { 18,37,37,17,17 };
 			float radConvert = 3.14159 / 180;
+			//a1 = clip(a1, 0, 6);
 
-			float ulAngle =a3*10;
-			float llAngle = a1*10;
-			float hAngle = 0;
-			//float footAngle = -llAngle -ulAngle - hAngle;
 
-			float lHeight = 2.8;
+			if (frame * rate[stageNumber] > 10000) {
+				stageNumber += 1;
+				frame = 0;
+			}
+			
+			float speed = lerp(0, 1, frame * rate[stageNumber] / 10000);
+
+
+			if (stageNumber > 4) {
+					stageNumber = 0;
+			}
+
+			float hAngle = lerp(stage[stageNumber][0], stage[stageNumber + 1][0], speed);
+			float ulAngle = lerp(stage[stageNumber][1], stage[stageNumber + 1][1], speed);
+			float llAngle = lerp(stage[stageNumber][2], stage[stageNumber + 1][2], speed);
+			if (stageNumber == 3) {
+				body[0][1] = interpolateWithEaseOut(stage[stageNumber][3], stage[stageNumber + 1][3], speed);
+			}
+			else if (stageNumber == 4) {
+				body[0][1] = interpolateWithEaseIn(stage[stageNumber][3], stage[stageNumber + 1][3], speed);
+			}
+			else {
+				body[0][1] = interpolateWithEaseIn(stage[stageNumber][3], stage[stageNumber + 1][3], speed, 1.9);
+			}
+			body[0][2] = interpolateWithEaseIn(stage[stageNumber][4], stage[stageNumber + 1][4], speed, 0.85);
+			float uArmAngle = lerp(stage[stageNumber][5], stage[stageNumber + 1][5], speed);
+			float lArmAngle = lerp(stage[stageNumber][6], stage[stageNumber + 1][6], speed);
+
+
+
+			/*float hAngle = -27;
+			float ulAngle = 80;
+			float llAngle = -70;*/
+			float footAngle = -llAngle -ulAngle - hAngle;
+
+			/*if (!dynamic) {
+				hAngle = 0;
+				ulAngle = 0;
+				llAngle = 0;
+			}*/
+
+			/*float lHeight = 2.8;
 			float lowerLegHeight = -1.2;
 			float hipHeight = -1;
 
-			float hipHoz = 4;
-			float upHoz = 3.4;
-			float downHoz = a2;
+			float hipHoz = a3;
+			float upHoz = 3.6;
+			float downHoz = 1.6;*/
 
 			body[1][0] = hAngle;
+
 			leftLeg[1][0] = ulAngle;
 			rightLeg[1][0] = ulAngle;
+			leftLegJoint[1][0] = llAngle;
+			rightLegJoint[1][0] = llAngle;
+
+			leftArm[1][0] = uArmAngle;
+			rightArm[1][0] = uArmAngle;
+			leftArmJoint[1][0] = lArmAngle;
+			rightArmJoint[1][0] = lArmAngle;
+
+			foot[1][0] = footAngle;
+
+			
+			std::cout << "A1 :" << std::endl;
+			std::cout << a1 << std::endl;
+			std::cout << "A2 :" << std::endl;
+			std::cout << a2 << std::endl;
+			std::cout << "A3 :" << std::endl;
+			std::cout << a3 << std::endl;
+
+
+
 			//foot[1][0] = footAngle;
 
 
-			leftLegJoint[1][0] = llAngle;
-			rightLegJoint[1][0] = llAngle;
+
 			/*if (count == 0) {
 				count += 1;
 				body[0][1] -= 3 + 3 - 3*(cos(body[1][0]*radConvert)) - 1.5 * (cos(leftLegJoint[1][0] * radConvert) + cos(leftLeg[1][0] * radConvert));
 			}*/
 			
-			float hipDisplacement = (hipHeight - hipHeight * cos(body[1][0] * radConvert));
+			/*float hipDisplacement = (hipHeight - hipHeight * cos(body[1][0] * radConvert));
 			float upperLegDisplacement = -(lHeight - lHeight * cos((leftLeg[1][0] + body[1][0]) * radConvert));
-			float lowerLegDisplacement = (lowerLegHeight - lowerLegHeight * cos((leftLegJoint[1][0] + leftLeg[1][0] + body[1][0]) * radConvert));
+			float lowerLegDisplacement = (lowerLegHeight - lowerLegHeight * cos((leftLegJoint[1][0] + leftLeg[1][0] + body[1][0]) * radConvert));*/
+
+			/*if (!dynamic) {
 			body[0][1] = -4.1 + upperLegDisplacement + lowerLegDisplacement + hipDisplacement;
-			body[0][2] = hipHoz * sin(body[1][0] * radConvert) + upHoz * sin((leftLeg[1][0]) * radConvert) + downHoz * sin((leftLegJoint[1][0] + leftLeg[1][0] + body[1][0]) * radConvert);
+			body[0][2] = hipHoz * sin((body[1][0] - leftLeg[1][0]) * radConvert) + upHoz * sin((leftLeg[1][0]) * radConvert) + downHoz * sin((leftLegJoint[1][0]) * radConvert);
+			}
+			else {
+			body[0][1] = a1;
+			body[0][2] = a2;
+			}*/
 
 
 			/*std::cout << " Upper Leg Angle : " << std::endl;
-			std::cout << a1*10 << std::endl;
-			std::cout << "Lower Leg Angle :" << std::endl;
 			std::cout << a2*10 << std::endl;
-			std::cout << "Hip Angle :" << std::endl;
-			std::cout << a3*10 << std::endl;*/
-
-			std::cout << "Angle : " << std::endl;
-			std::cout << a1 * 10 << std::endl;
 			std::cout << "Modifier :" << std::endl;
-			std::cout << a2<< std::endl;
+			std::cout << a3 << std::endl;
+			std::cout << "Hip Angle :" << std::endl;
+			std::cout << a1*10 << std::endl;
 			std::cout << "Coords :" << std::endl;
+			std::cout << body[0][2] << std::endl;*/
+
+			//std::cout << frame << std::endl;
+			/*if (dynamic) {
+
+			std::cout << "Y :" << std::endl;
 			std::cout << body[0][2] << std::endl;
+			std::cout << "X :" << std::endl;
+			std::cout << body[0][1] << std::endl;
+			}*/
 
 
 
@@ -436,25 +553,15 @@ public:
 
 		Objects Chest(0,0,0,0,0,0,1.5,0.5,0.5,true), Abdomen(0,-0.68,0,0,0,0,1.25,0.85,0.5,true), Pelvis(0, -1.5, 0, 0, 0, 0, 1.0, 0.75, 0.5, true);
 		
+		
 		glPushMatrix();
-		glColor3f(1,1,1);
-		glLineWidth(5.0);
-		glBegin(GL_LINES);
-		//for (float x = -30; x = x + 0.1; x < 30) {
-
-		glVertex3d(0, -5.5, -50);
-		glVertex3d(0, -5.5, 50);
-		//}
-		glEnd();
-		glPopMatrix();
-		glPushMatrix();
-		glTranslatef(0, -8.91, 0);
+		glTranslatef(0, -9.16, 0);
 		glRotatef(90,1,0,0);
 		glColor3f(1.0f, 1.0f, 1.0f);
 		glRectf(-25, 25, 25, -25);
 		glPopMatrix();
 		glPushMatrix();
-		glTranslatef(0, -8.9, 0);
+		glTranslatef(0, -9.15, 0);
 		glRotatef(90, 1, 0, 0);
 		glColor3f(0.0f, 1.0f, 0.0f);
 		glRectf(-1.0, 1.0, 1, -1);
@@ -470,7 +577,7 @@ public:
 
 		glPushMatrix();
 			AnimatedTransformations(0, 1, 0, 1, 1, 1);
-			glColor3f(0, 1, 0);
+			glColor3f(0.36, 0.67, 0.92);
 			glPushMatrix();
 			
 			float angle = sin(rot * 0.01);
@@ -484,10 +591,10 @@ public:
 				AnimatedTransformations(chest[0][0], chest[0][1],chest[0][2],1,1,1);
 				AnimatedRotation(Chest, chest[1][0], chest[1][1],chest[1][2] ,  1);
 					
-					glColor3f(0, 1, 0);
+				glColor3f(0.36, 0.67, 0.92);
 					Chest.setObject(); //Abdomen and Arms are the child 
 						glPushMatrix();
-							glColor3f(1, 0, 0);
+						glColor3f(0.36, 0.67, 0.92);
 							Abdomen.setObject();
 						glPopMatrix();
 
@@ -516,7 +623,7 @@ public:
 		Objects Head(0,0,0,0,0,0,0.5,0.5,0.5,false), Neck(0,-0.75,0,0,0,0,0.25,0.5,0.25,true);
 		glPushMatrix();
 			AnimatedTransformations(0,1,0,1,1,1);
-			glColor3f(0.3, 0.1, 0.1);
+			glColor3f(1, 1, 1);
 			Head.setObject();
 			glColor3f(0.0, 0.2, 0.2);
 			Neck.setObject();
@@ -531,11 +638,11 @@ public:
 		AnimatedTransformations(0, 1, 0, 1, 1, 1);
 		Pelvis.setObject();
 			glPushMatrix();
-				glColor3f(0.3, 0.1, 0.2);
+			glColor3f(0.36, 0.67, 0.92);
 				Chest.setObject();
-				glColor3f(0.3, 0.3, 0.1);
+				glColor3f(0.36, 0.67, 0.92);
 				Abdomen.setObject();
-				glColor3f(0.3, 0.1, 0.0);
+				glColor3f(0.36, 0.67, 0.92);
 			glPopMatrix();
 		glPopMatrix();
 	}
@@ -635,7 +742,7 @@ public:
 			Leg1(-0.12, -1.2, 0, 0, 0, 0, 0.5, 1.5, 0.5, true), 
 			LegJoint(-0.12, -2.15, 0, 0, 0, 0, 0.3, 0.3, 0.3, false), 
 			Leg2(-0.12, -3.1, 0, 0, 0, 0, 0.5, 1.5, 0.5, true),
-			Foot(-0.12, -3.95, 0.25, 0, 0, 0, 0.5, 0.25, 1, true);
+			Foot(-0.12, -3.95, -0.25, 0, 0, 0, 0.5, 0.25, 1, true);
 
 
 		glPushMatrix();
@@ -662,11 +769,11 @@ public:
 						glPushMatrix();
 						glColor3f(0.36, 0.67, 0.92);
 							Leg2.setObject();     //Lower Leg
-							//glPushMatrix();
-							//	AnimatedRotation(Foot, foot[1][0], 0, 0, 1);
-							//	glColor3f(1, 0, 0);
-							//	Foot.setObject();     //Lower Leg
-							//glPopMatrix();
+							glPushMatrix();
+								AnimatedRotation(Foot, foot[1][0], 0, 0, 1);
+								glColor3f(0.36, 0.67, 0.92);
+								Foot.setObject();     //Lower Leg
+							glPopMatrix();
 						glPopMatrix();
 					glPopMatrix();
 				glPopMatrix();
@@ -678,7 +785,7 @@ public:
 				Leg1(0.12, -1.2, 0, 0, 0, 0, 0.5, 1.5, 0.5, true), 
 				LegJoint(0.12, -2.15, 0, 0, 0, 0, 0.3, 0.3, 0.3, false), 
 				Leg2(0.12, -3.1, 0, 0, 0, 0, 0.5, 1.5, 0.5, true), 
-				Foot(0.12, -3.95, 0.25, 0, 0, 0, 0.5, 0.25, 1, true);;
+				Foot(0.12, -3.95, -0.25, 0, 0, 0, 0.5, 0.25, 1, true);;
 		glPushMatrix();
 		AnimatedTransformations(0.5, -1.95, 0, 1, 1, 1);
 		AnimatedTransformations(rightLeg[0][0], rightLeg[0][1], rightLeg[0][2],1,1,1);
@@ -704,11 +811,11 @@ public:
 						glPushMatrix();
 						glColor3f(0.36, 0.67, 0.92);
 							Leg2.setObject(); //Lower Leg
-							//glPushMatrix();
-							//	AnimatedRotation(Foot, foot[1][0], 0, 0, 1);
-							//	glColor3f(1, 0, 0);
-							//	Foot.setObject();     //Lower Leg
-							//glPopMatrix();
+							glPushMatrix();
+								AnimatedRotation(Foot, foot[1][0], 0, 0, 1);
+								glColor3f(0.36, 0.67, 0.92);
+								Foot.setObject();     //Lower Leg
+							glPopMatrix();
 						glPopMatrix();
 					glPopMatrix();
 				glPopMatrix();
@@ -1219,10 +1326,12 @@ public:
 };
 
 HumanoidSkeleton S;
+//HumanoidSkeleton S2;
 
 
 void SequeneceManager(float angle, float ty, float modifier, float a2)
 {
 	InitLight();
-	S.Update(angle, ty, modifier, a2);
+	S.Update(angle, ty, modifier, a2,true);
+	//S2.Update(angle, ty, modifier, a2,false);
 }

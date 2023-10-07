@@ -25,7 +25,7 @@ bool mouseDown = false;
 
 double valZoom = 10.0;
 
-double camX = 0, camY = 0, camZ = 10.0;
+double camX = 20, camY = -5, camZ = 20.0;
 
 void Animation()
 {
@@ -194,6 +194,7 @@ int main(int argc, char** argv)
         glutIdleFunc(Animation);
 
     else {
+        glutIdleFunc(Animation);
         glutMouseFunc(sphereMouseEvent);
         glutMotionFunc(sphereMouseMotion);
         glutKeyboardFunc(keyBoard);
