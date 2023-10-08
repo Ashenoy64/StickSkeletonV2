@@ -13,8 +13,9 @@
 //walking_calculation : 30 stages animated
 
 
-
-
+#define viewAngle 1
+#define EDITING false
+#define PI 3.14159265358979323846
 #define animationSequnence "walking_calculation"
 
 
@@ -252,7 +253,7 @@ public:
 		{
 			//int stage = (int)(rot/20) % 9;
 			int stage = (int)(rot/20) % 30;
-			//int stage = 3;
+			//int stage = 2;
 			/*
 			leftLeg = [-15, -30, 0, 15, 30, 0, -15, -30]
 			leftLegJoint = [0, 30, 0, 0, 15, 30, 45, 15]
@@ -264,7 +265,7 @@ public:
 			*/
 
 			if (!(sin(angle) > -0.2 and sin(angle) < 0.2))
-				body[0][2] = -10 + (2.276/4 * rot / 35);
+				body[0][2] = -10 + (2.276/8 * rot / 20);
 
 
 			if (stage == 1)
@@ -330,7 +331,7 @@ public:
 				rightLeg[1][0] = 0;
 				rightLegJoint[1][0] = 30;
 
-				body[0][1] = -0.26;
+				body[0][1] = -0.22;
 
 
 				rightArm[1][0] = 0;
@@ -384,7 +385,7 @@ public:
 				rightLeg[1][0] = -7.5;
 				rightLegJoint[1][0] = 42;
 
-				body[0][1] = -0.145;
+				body[0][1] = -0.14;
 
 				rightArm[1][0] = 11.5;
 				rightArmJoint[1][0] = -4;
@@ -438,7 +439,7 @@ public:
 				rightLeg[1][0] = -27.5;
 				rightLegJoint[1][0] = 22.5;
 
-				body[0][1] = 0.055;
+				body[0][1] = -0.055;
 
 				rightArm[1][0] = 26;
 				rightArmJoint[1][0] = -11.5;
@@ -456,7 +457,7 @@ public:
 				rightLeg[1][0] = -30;
 				rightLegJoint[1][0] = 15;
 
-				body[0][1] = +0.11;
+				body[0][1] = -0.11;
 
 				rightArm[1][0] = 30;
 				rightArmJoint[1][0] =-15;
@@ -586,7 +587,7 @@ public:
 				rightLeg[1][0] = -30;
 				rightLegJoint[1][0] = 30;
 
-				body[0][1] = -0.26;
+				body[0][1] = -0.22;
 
 				rightArm[1][0] = 15;
 				rightArmJoint[1][0] = 0;
@@ -618,7 +619,7 @@ public:
 				rightLeg[1][0] = -15;
 				rightLegJoint[1][0] = 15;
 
-				body[0][1] = -0.185;
+				body[0][1] = -0.14;
 
 				rightArm[1][0] = -15;
 				rightArmJoint[1][0] = -7.5;
@@ -700,7 +701,7 @@ public:
 				rightLeg[1][0] = 11.5;
 				rightLegJoint[1][0] = 0;
 
-				body[0][1] = 0.5;
+				body[0][1] = -0.05;
 
 
 				rightArm[1][0] = -27.5;
@@ -717,7 +718,7 @@ public:
 				rightLeg[1][0] = 15;
 				rightLegJoint[1][0] = 0;
 
-				body[0][1] = 0.11;
+				body[0][1] = -0.11;
 
 
 				rightArm[1][0] = -30;
@@ -733,7 +734,7 @@ public:
 				rightLeg[1][0] = 18.5;
 				rightLegJoint[1][0] = 3.75;
 
-				body[0][1] = 0.55;
+				body[0][1] = -0.05;
 
 
 				rightArm[1][0] = -27.5;
@@ -788,7 +789,7 @@ public:
 
 		glPushMatrix();
 			AnimatedTransformations(0, 1, 0, 1, 1, 1);
-			glColor3f(0.3, 0.1, 0.0);
+			glColor3f(1,0.5,0.0);
 			glPushMatrix();
 			
 			float angle = sin(rot * 0.01);
@@ -802,10 +803,10 @@ public:
 				AnimatedTransformations(chest[0][0], chest[0][1],chest[0][2],1,1,1);
 				AnimatedRotation(Chest, chest[1][0], chest[1][1],chest[1][2] ,  1);
 					
-					glColor3f(0.3, 0.1, 0.2);
+					glColor3f(1, 0.5, 0.5);
 					Chest.setObject(); //Abdomen and Arms are the child 
 						glPushMatrix();
-							glColor3f(0.3, 0.3, 0.1);
+							glColor3f(1, 0.5, 0.0);
 							Abdomen.setObject();
 						glPopMatrix();
 
@@ -834,9 +835,9 @@ public:
 		Objects Head(0,0,0,0,0,0,0.5,0.5,0.5,false), Neck(0,-0.75,0,0,0,0,0.25,0.5,0.25,true);
 		glPushMatrix();
 			AnimatedTransformations(0,1,0,1,1,1);
-			glColor3f(0.3, 0.1, 0.1);
+			glColor3f(0.5, 0.5,1 );
 			Head.setObject();
-			glColor3f(0.0, 0.2, 0.2);
+			glColor3f(1, 0.5, 0.0);
 			Neck.setObject();
 		glPopMatrix();
 	}

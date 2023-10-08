@@ -4,8 +4,7 @@
 #include "Utilities.h"
 
 
-#define EDITING false
-#define PI 3.14159265358979323846
+
 
 float angle = 0.0f;
 float tx = 0.0;
@@ -131,11 +130,16 @@ void Display()
    
     }
     else {
-        //LookAt(3, 6, 9);
+        if(viewAngle == 1)
+        LookAt(3, 6, 9);
         //glRotatef(90, 0, 1, 0);
+        else
         LookAt(40, 0, 0);
     }
-    SequeneceManager(angle);
+    if (not EDITING)
+        SequeneceManager(angle);
+    else
+        SequeneceManager(0);
     
     glFlush();
 }
