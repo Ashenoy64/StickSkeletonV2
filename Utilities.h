@@ -9,10 +9,10 @@
 
 
 //walking : uses code calculations
+//test : jumping
 //csv_walking : uses inefficient method to read csv for animation
 //csv_walking_efficient : uses efficient csv reading method
 //walking_calculation : 30 stages animated
-//test :jumping
 
 #define viewAngle 3
 #define EDITING false
