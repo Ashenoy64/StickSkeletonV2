@@ -4,13 +4,17 @@
 #include "Utilities.h"
 
 
-#define EDITING false
+#define EDITING true
 #define PI 3.14159265358979323846
 
 float angle = 0.0f;
 float tx = 0.0;
 float ty = 0.0;
 float tz = 0.0;
+
+float uAngle = 0;
+float modifier = 0;
+float a2 = 0;
 
 float xrot = 0.0f;
 float yrot = 0.0f;
@@ -21,7 +25,7 @@ bool mouseDown = false;
 
 double valZoom = 10.0;
 
-double camX = 0, camY = 0, camZ = 10.0;
+double camX = 20, camY = -5, camZ = 20.0;
 
 void Animation()
 {
@@ -53,7 +57,33 @@ void keyBoard(unsigned char key, int x, int y)
     case 'd':
         tx += 0.1;
         break;
+
+    case '1':
+        uAngle -= 0.1;
+        break;
+
+    case '2':
+        uAngle += 0.1;
+        break;
+
+    case '9':
+        modifier -= 0.1;
+        break;
+
+    case '0':
+        modifier += 0.1;
+        break;
+
+    case '7':
+        a2 -= 0.1;
+        break;
+
+    case '8':
+        a2 += 0.1;
+        break;
+
     }
+
     glutPostRedisplay();
 
 }
@@ -135,7 +165,7 @@ void Display()
         //glRotatef(90, 0, 1, 0);
         LookAt(40, 0, 0);
     }
-    SequeneceManager(angle);
+    SequeneceManager(angle, uAngle, modifier, a2);
     
     glFlush();
 }
@@ -164,6 +194,7 @@ int main(int argc, char** argv)
         glutIdleFunc(Animation);
 
     else {
+        glutIdleFunc(Animation);
         glutMouseFunc(sphereMouseEvent);
         glutMotionFunc(sphereMouseMotion);
         glutKeyboardFunc(keyBoard);
