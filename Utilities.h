@@ -7,7 +7,6 @@
 #include <string>
 #include <cmath>
 
-
 //walking : uses code calculations
 //test : jumping
 //csv_walking : uses inefficient method to read csv for animation
@@ -16,7 +15,7 @@
 
 #define viewAngle 3
 #define EDITING false
-#define PI 3.14159265358979323846
+#define PI 3.1415926535897932
 #define animationSequnence "jumping"
 
 
