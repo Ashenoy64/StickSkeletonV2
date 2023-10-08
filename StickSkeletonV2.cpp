@@ -3,9 +3,6 @@
 #include <math.h>
 #include "Utilities.h"
 
-
-
-
 float angle = 0.0f;
 float tx = 0.0;
 float ty = 0.0;
@@ -143,7 +140,6 @@ void sphereMouseEvent(int button, int state, int x, int y)
         ydiff = -y + xrot;
     }
 }
-
 
 void Display()
 {
