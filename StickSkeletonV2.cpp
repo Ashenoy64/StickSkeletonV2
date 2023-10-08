@@ -166,7 +166,11 @@ void Display()
         else if (viewAngle == 2)
             LookAt(40, 0, 0);
         else if (viewAngle == 3)
-            LookAt(-12, 3, -14);
+            gluLookAt(
+                -15, 0, -15,
+                0.0f, -5.0f, 0.0f,
+                0.0f, 1.0f, 0.0f
+            );
     }
     if (not EDITING)
         SequeneceManager(angle, uAngle, modifier, a2);

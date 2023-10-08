@@ -17,7 +17,7 @@
 #define viewAngle 3
 #define EDITING false
 #define PI 3.14159265358979323846
-#define animationSequnence "walking"
+#define animationSequnence "jumping"
 
 
 class Objects
@@ -190,13 +190,13 @@ public:
 		return (1.0 - t) * value1 + t * value2;
 	}
 
-	double cubicEaseOut(double t) {
-		return 1.0 - pow(1.0 - t, 3.0);
+	double cubicEaseOut(double t,double power) {
+		return 1.0 - pow(1.0 - t, power);
 	}
 
 	// Interpolate using cubic easing-out
-	double interpolateWithEaseOut(double value1, double value2, double t) {
-		return value1 + cubicEaseOut(t) * (value2 - value1);
+	double interpolateWithEaseOut(double value1, double value2, double t,double power) {
+		return value1 + cubicEaseOut(t,power) * (value2 - value1);
 	}
 
 	double cubicEaseIn(double t, double power = 2.0) {
@@ -293,13 +293,12 @@ public:
 
 		else if (animationSequnence == "jumping")
 		{
-			
+			float debug[7] = { -4,30,-30,-4.3,0.7,-15,50 };
 
-			float stage[6][7] = { { 0,0,0, -4.1, 0,0,0},{ -27 ,80 ,-60, -4.95, 1.05,-72,22.5}, {-4,30,-30,-4.3,0.7,-15,50}, {0,5,-10,-3,0,50,25},{0,0,-5,-1,0,90,0},{ 0,0,0, -4.1, 0,0,0} };
-			float rate[5] = { 18,37,37,17,17 };
-			float radConvert = 3.14159 / 180;
+			float stage[6][7] = { { 0,0,0, -4.1, 0,0,0},{ -27 ,80 ,-60, -4.95, 1.05,-72,22.5}, { -4 ,30 ,-30, -4.3,0.7,-72,22.5}, {0,5,-10,-3,0,50,25},{0,0,-5,-1,0,90,0},{ 0,0,0, -4.1, 0,0,0} };
+			float speedUp = 1.5;
+			float rate[5] = { 18 * speedUp,37 * speedUp,37 * speedUp,17 * speedUp,17 *speedUp };
 			//a1 = clip(a1, 0, 6);
-
 
 			if (frame * rate[stageNumber] > 10000) {
 				stageNumber += 1;
@@ -316,8 +315,11 @@ public:
 			float hAngle = lerp(stage[stageNumber][0], stage[stageNumber + 1][0], speed);
 			float ulAngle = lerp(stage[stageNumber][1], stage[stageNumber + 1][1], speed);
 			float llAngle = lerp(stage[stageNumber][2], stage[stageNumber + 1][2], speed);
-			if (stageNumber == 3) {
-				body[0][1] = interpolateWithEaseOut(stage[stageNumber][3], stage[stageNumber + 1][3], speed);
+			if (stageNumber == 1) {
+				body[0][1] = interpolateWithEaseOut(stage[stageNumber][3], stage[stageNumber + 1][3], speed,1.25);
+			}
+			else if (stageNumber == 3) {
+				body[0][1] = interpolateWithEaseOut(stage[stageNumber][3], stage[stageNumber + 1][3], speed,2);
 			}
 			else if (stageNumber == 4) {
 				body[0][1] = interpolateWithEaseIn(stage[stageNumber][3], stage[stageNumber + 1][3], speed);
@@ -958,25 +960,19 @@ public:
 		Objects Chest(0,0,0,0,0,0,1.5,0.5,0.5,true), Abdomen(0,-0.68,0,0,0,0,1.25,0.85,0.5,true), Pelvis(0, -1.5, 0, 0, 0, 0, 1.0, 0.75, 0.5, true);
 		
 		
-		glPushMatrix();
+		/*glPushMatrix();
 		glTranslatef(0, -9.16, 0);
 		glRotatef(90,1,0,0);
 		glColor3f(1.0f, 1.0f, 1.0f);
 		glRectf(-25, 25, 25, -25);
-		glPopMatrix();
+		glPopMatrix();*/
 		glPushMatrix();
 		glTranslatef(0, -9.15, 0);
 		glRotatef(90, 1, 0, 0);
-		glColor3f(0.0f, 1.0f, 0.0f);
+		glColor3f(1.0f, 1.0f, 1.0f);
 		glRectf(-1.0, 1.0, 1, -1);
 		glPopMatrix();
-		glPushMatrix();
-		glColor3f(0, 0, 1);
-		glPointSize(5.0);
-		glBegin(GL_POINTS);
-		glVertex3d(0, -5.0, 0);
-		glEnd();
-		glPopMatrix();
+		
 		//std::cout << "hello"<<std::endl;
 
 		glPushMatrix();
